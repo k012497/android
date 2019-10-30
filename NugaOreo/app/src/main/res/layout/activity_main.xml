@@ -8,46 +8,56 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edtMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="http://webaddress"
+        android:hint="webaddress"
         android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnShow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10"
-        android:text="Button"
-        tools:text="글자 나타내기" />
+        android:layout_marginTop="10dp"
+        android:text="글자 나타내기"
+        android:textSize="24sp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10"
-        android:text="홈페이지 열기" />
+        android:layout_marginTop="10dp"
+        android:text="홈페이지 열기"
+        android:textSize="24sp" />
 
     <RadioGroup
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/rdoRest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:checked="true"
             android:gravity="center_horizontal"
-            android:text="RadioButton" />
+            android:text="restaurant" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/rdoMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="RadioButton" />
+            android:text="administrator" />
 
     </RadioGroup>
+
+    <ImageView
+        android:id="@+id/ivShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/restaurant" />
 </LinearLayout>

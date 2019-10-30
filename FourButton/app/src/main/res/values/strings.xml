@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FourButton</string>
+    <string name="nate_home">nate.com 열기</string>
+    <string name="phone_number">전화걸기</string>
+    <string name="gallery">갤러리</string>
+    <string name="exit">닫기</string>
+</resources>

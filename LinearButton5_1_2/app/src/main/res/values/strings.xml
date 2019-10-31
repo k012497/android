@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">5_1_2</string>
+    <string name="btn1">버튼1</string>
+    <string name="btn2">버튼2</string>
+    <string name="btn3">버튼3</string>
+    <string name="txt1">글자1</string>
+    <string name="txt2">글자2</string>
+    <string name="txt3">글자3</string>
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Version4_4</string>
+    <string name="start">선택을 시작하시겠습니까?</string>
+    <string name="prefer">좋아하는 안드로이드 버전은?</string>
+    <string name="lollipop">롤리팝(5.0)</string>
+    <string name="marshmallow">마시멜로(6.0)</string>
+    <string name="nuga">누가(7.0)</string>
+    <string name="quit">QUIT</string>
+    <string name="reset">RESET</string>
+
+</resources>

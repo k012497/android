@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D4BABA</color>
+    <color name="IndiPink">#CBB1B1</color>
+    <color name="red">#FF0000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="btn_grayblue_color">#4574AE</color>
+    <color name="bnt_graymint_color">#9BAE93</color>
+    <color name="btn_beige_color">#C0BAA8</color>
+    <color name="btn_purple_color">#A48EC4</color>
+</resources>

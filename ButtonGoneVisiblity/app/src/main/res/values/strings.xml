@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ButtonGoneVisiblity</string>
+    <string name="button1_name">버튼1입니당</string>
+    <string name="button2_name">버튼2입니당</string>
+    <string name="button3_name">버튼3입니당</string>
+    <string name="button4_name">버튼4입니당</string>
+    <string name="button5_name">버튼5입니당</string>
+</resources>

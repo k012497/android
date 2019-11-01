@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button android:id="@+id/baseBtn"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:text="기!준!"
+        android:layout_centerInParent="true" />
+
+
+    <Button android:id="@+id/topCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="123123"
+        android:layout_above="@+id/baseBtn"
+        android:layout_alignRight="@+id/baseBtn"
+        android:layout_alignLeft="@+id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="alignLeft\nabove"
+        android:layout_alignLeft="@+id/baseBtn"
+        android:layout_above="@+id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toLeftOf\nalignTop"
+        android:layout_toLeftOf="@+id/baseBtn"
+        android:layout_alignTop="@id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toLeftOf\nalignBaseline"
+        android:layout_toLeftOf="@+id/baseBtn"
+        android:layout_alignBaseline="@id/baseBtn"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toLeftOf\nalignBottom"
+        android:layout_toLeftOf="@+id/baseBtn"
+        android:layout_alignBottom="@id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toRightOf\nalignTop"
+        android:layout_toRightOf="@+id/baseBtn"
+        android:layout_alignTop="@id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toRightOf\nalignTop"
+        android:layout_toRightOf="@+id/baseBtn"
+        android:layout_alignBaseline="@id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toRightOf\nalignBottom"
+        android:layout_toRightOf="@+id/baseBtn"
+        android:layout_alignBottom="@id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toRightOf\nalignBottom"
+        android:layout_alignRight="@id/baseBtn"
+        android:layout_below="@id/baseBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toRightOf\nalignabove"
+        android:layout_toRightOf="@id/baseBtn"
+        android:layout_above="@id/baseBtn"/>
+
+</RelativeLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout android:id="@+id/number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:hint="010-0000-0000" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="버튼" />
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/btnLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/number"
+        android:layout_alignLeft="@+id/number"
+        android:orientation="vertical">
+
+        <Button android:id="@+id/btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전화번호"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/btnLeft"
+        android:layout_alignTop="@id/btnLeft"/>
+
+    <LinearLayout android:id="@+id/btnRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/number"
+        android:layout_alignRight="@+id/number">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"/>
+    </LinearLayout>
+
+</RelativeLayout>

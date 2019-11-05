@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/itemSpain" android:title="스페인"/>
+        <item android:id="@+id/itemSlovenia" android:title="슬로베니아"/>
+        <item android:id="@+id/itemPoland" android:title="폴란드"/>
+    </group>
+
+    <item android:id="@+id/rotate" android:title="ROTATE"/>
+
+</menu>

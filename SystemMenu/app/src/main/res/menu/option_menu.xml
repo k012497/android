@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/itemRed"
+        android:title="background (RED)"/>
+    <item android:id="@+id/itemBlue"
+        android:title="background (BLUE)"/>
+    <item android:id="@+id/itemGreen"
+        android:title="background (GREEN)"/>
+    <item android:id="@+id/itemChange"
+        android:title="change Button">
+        <menu>
+            <item android:id="@+id/subRotate"
+                android:title="rotation"/>
+            <item android:id="@+id/subSize"
+                android:title="Zoom In"/>
+        </menu>
+    </item>
+</menu>

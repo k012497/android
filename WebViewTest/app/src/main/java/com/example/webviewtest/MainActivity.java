@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         webView = findViewById(R.id.webView);
 
-        // WebView를 실행하려면 WebViewClient 클래스를 상속받아서 shoutOverrideLoading을 진행해야 함.
+        // WebView를 실행하려면 WebViewClient 클래스를 상속받아서 shouldOverrideLoading을 진행해야 함.
         webView.setWebViewClient(new MyWebViewClient()); // 브라우저 가져와서 url집어넣으려고 하는 것
         WebSettings webSettings = webView.getSettings(); // 웹 세팅
         webSettings.setBuiltInZoomControls(true);

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center">
+        <Button
+            android:id="@+id/btnDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:text="I LIKE"
+            android:textColor="#ffffff"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/btnRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:text="I LIKE"
+            android:textColor="#ffffff"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/btnCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:text="I LIKE"
+            android:textColor="#ffffff"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAnimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_below="@id/buttons"
+        android:gravity="center"/>
+
+</RelativeLayout>

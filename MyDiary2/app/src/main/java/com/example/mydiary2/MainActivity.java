@@ -13,13 +13,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements DatePicker.OnDateChangedListener, View.OnClickListener {
 
-    Button btnEdit, btnSave, btnExit;
+    Button btnEdit, btnSave, btnExit, btnDelete;
     DatePicker datePicker;
     EditText editText;
     String fileName;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
         datePicker = findViewById(R.id.datePicker);
         editText = findViewById(R.id.editText);
         btnExit = findViewById(R.id.btnExit);
+        btnDelete = findViewById(R.id.btnDelete);
 
         // 현재 날짜로 세팅
         currentDateSetting();
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
         // 일기 저장 이벤트
         btnEdit.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
 
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +69,28 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnEdit: case R.id.btnSave:
+                saveDiary();
+                break;
+            case R.id.btnDelete:
+                toastDisplay("try to delete");
+                deleteDiary();
+                break;
+        }
+    }
+
+    private void deleteDiary() {
+        File file = new File(getFilesDir().getAbsolutePath() + "/" + fileName);
+        if (file.exists()) {
+            file.delete();
+            toastDisplay(fileName + "삭제 완료");
+        } else {
+            toastDisplay("삭제 실패 ");
+        }
+    }
+
+    public void saveDiary(){
         try {
             // 텍스트 내용을 파일로 저장하기
             FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -80,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements DatePicker.OnDate
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 

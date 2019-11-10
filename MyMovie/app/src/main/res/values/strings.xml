@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">씨네마 천국 🎥</string>
+    <string name="bookingRate">예매율</string>
+    <string name="avgRating">평점</string>
+    <string name="accumulatedCount">누적관객수</string>
+    <string name="plot">줄거리</string>
+    <string name="review">한줄평</string>
+    <string name="directorAndActor">감독/출연</string>
+    <string name="director">감독</string>
+    <string name="actor">출연</string>
+    <string name="booking">예매하기</string>
+    <string name="showAll">모두 보기</string>
+    <string name="writeReview">작성하기</string>
+</resources>

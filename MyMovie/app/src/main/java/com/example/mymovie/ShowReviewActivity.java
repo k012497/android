@@ -6,7 +6,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +18,8 @@ public class ShowReviewActivity extends AppCompatActivity {
 
     LinearLayout writeReview;
     ListView listView;
+    RatingBar avgRating;
+    TextView tvTotalReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,8 @@ public class ShowReviewActivity extends AppCompatActivity {
 
         writeReview = findViewById(R.id.writeReview);
         listView = findViewById(R.id.listView);
+        avgRating = findViewById(R.id.avgRating);
+        tvTotalReview = findViewById(R.id.tvTotalReview);
 
         ReviewAdapter adapter = new ReviewAdapter();
         adapter.addItem(new ReviewItem("k012497", "10분 전", 7, "그럭저럭 볼만해요", 1, R.drawable.user1));

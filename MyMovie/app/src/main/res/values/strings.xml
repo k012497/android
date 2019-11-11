@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">씨네마 천국 🎥</string>
+    <string name="write_review">한줄평 작성</string>
+    <string name="show_review">모든 한줄평</string>
     <string name="bookingRate">예매율</string>
     <string name="avgRating">평점</string>
     <string name="accumulatedCount">누적관객수</string>

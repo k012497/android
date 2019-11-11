@@ -134,11 +134,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Boolean save = false;
         switch (requestCode){
             case 1:
-                if(resultCode == Activity.RESULT_OK) save = true;
-                Toast.makeText(this, "from WRITING review activity \n저장여부: " + save.toString(), Toast.LENGTH_SHORT).show();
+                String strSave = data.getStringExtra("save");
+                Toast.makeText(this, "from WRITING review activity \n저장여부: " + strSave, Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 Toast.makeText(this, "from SHOWING review activity", Toast.LENGTH_SHORT).show();

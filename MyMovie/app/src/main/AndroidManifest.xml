@@ -16,9 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WriteReviewActivity">
+        <activity android:name=".WriteReviewActivity"
+            android:label="@string/write_review">
         </activity>
-        <activity android:name=".ShowReviewActivity">
+        <activity android:name=".ShowReviewActivity"
+            android:label="@string/show_review">
         </activity>
     </application>
 

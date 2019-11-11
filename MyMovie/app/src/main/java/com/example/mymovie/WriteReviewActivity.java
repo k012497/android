@@ -35,13 +35,13 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
         Intent intent = new Intent();
         switch (v.getId()){
             case R.id.btnSave:
-                intent.putExtra("key", "value");
+                intent.putExtra("save", "true");
                 setResult(Activity.RESULT_OK, intent);
                 finish();
                 break;
 
             case R.id.btnCancel:
-                intent.putExtra("key", "value");
+                intent.putExtra("save", "false");
                 setResult(Activity.RESULT_CANCELED, intent);
                 finish();
                 break;

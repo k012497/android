@@ -322,7 +322,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="#ffffff">
 
@@ -361,11 +361,11 @@
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="380dp"
                 app:layout_constraintBottom_toTopOf="@+id/btnShowAll"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/writeReview" />
+                app:layout_constraintTop_toBottomOf="@id/writeReview" />
 
             <Button
                 android:id="@+id/btnShowAll"

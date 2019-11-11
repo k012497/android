@@ -1,7 +1,10 @@
 package com.example.mymovie;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+// listView height wrap_content로 하면 1개만 나옴
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnShowAll;
@@ -27,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int currentThumbDownCount;
     boolean thumbUpSelected = false;
     boolean thumbDownSelected = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView = findViewById(R.id.listView);
 
         ReviewAdapter adapter = new ReviewAdapter();
-//        adapter.addItem(new ReviewItem("k012497", "10분 전", 7, "그럭저럭 볼만예해요", 1, R.drawable.user1));
+        adapter.addItem(new ReviewItem("k012497", "10분 전", 7, "그럭저럭 볼만해요", 1, R.drawable.user1));
         adapter.addItem(new ReviewItem("abc123", "1시간 전", 4, "별로 재미 없어여", 3, R.drawable.user1));
         adapter.addItem(new ReviewItem("yeahjinn", "1시간 전", 10, "김소진 살앙해", 3, R.drawable.user1));
         adapter.addItem(new ReviewItem("sooojinn", "1시간 전", 10, "김예진 살앙해", 3, R.drawable.user1));
@@ -59,11 +66,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     class ReviewAdapter extends BaseAdapter {
-        ArrayList<ReviewItem> items = new ArrayList<ReviewItem>();
 
+        ArrayList<ReviewItem> items = new ArrayList<ReviewItem>();
         @Override
         public int getCount() {
-            return items.size();
+            // 최근 3개만 보여주기
+            return 3;
         }
 
         public void addItem(ReviewItem item){
@@ -98,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Intent intent = null;
+
         switch (v.getId()){
             case R.id.ivThumbUp:
                 thumbUpSelected();
@@ -105,13 +115,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ivThumbDown:
                 thumbDownSelected();
                 break;
-           case R.id.writeReview:
+            case R.id.writeReview:
+                //Intent를 이용해서 새로운 액티비티를 띄움
+                intent = new Intent(getApplicationContext(), WriteReviewActivity.class);
+                startActivityForResult(intent, 1);
                 Toast.makeText(this, "리뷰를 작성합니다", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.btnShowAll:
+                intent = new Intent(getApplicationContext(), ShowReviewActivity.class);
+                startActivityForResult(intent, 2);
                 Toast.makeText(this, "리뷰를 모두 불러옵니다", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Boolean save = false;
+        switch (requestCode){
+            case 1:
+                if(resultCode == Activity.RESULT_OK) save = true;
+                Toast.makeText(this, "from WRITING review activity \n저장여부: " + save.toString(), Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(this, "from SHOWING review activity", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
     }
 
     private void thumbUpSelected() {

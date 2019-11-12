@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
             }
+            invalidate();
             return true;
         }
 
@@ -61,37 +62,24 @@ public class MainActivity extends AppCompatActivity {
                     bMask = new BlurMaskFilter(30, BlurMaskFilter.Blur.NORMAL);
                     paint.setMaskFilter(bMask);
                     canvas.drawBitmap(picture, picX, picY, paint);
-                    invalidate();
                     break;
                 case 2:
                     bMask = new BlurMaskFilter(30, BlurMaskFilter.Blur.INNER);
                     paint.setMaskFilter(bMask);
                     canvas.drawBitmap(picture, picX, picY, paint);
-                    invalidate();
-                    picture.recycle();
                     break;
                 case 3:
                     bMask = new BlurMaskFilter(30, BlurMaskFilter.Blur.OUTER);
                     paint.setMaskFilter(bMask);
                     canvas.drawBitmap(picture, picX, picY, paint);
-                    invalidate();
-                    picture.recycle();
                     break;
                 case 4:
                     bMask = new BlurMaskFilter (30, BlurMaskFilter.Blur.SOLID);
                     paint.setMaskFilter(bMask);
                     canvas.drawBitmap(picture, picX, picY, paint);
-                    invalidate();
-                    picture.recycle();
                     break;
-
             }
-
-
-
-
-
-
+            picture.recycle();
 
         }
     }

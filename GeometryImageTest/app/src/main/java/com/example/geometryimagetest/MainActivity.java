@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
             }
+            invalidate();
             return true;
         }
 
@@ -63,21 +64,18 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     canvas.rotate(45, cenX, cenY);
                     canvas.drawBitmap(picture, picX, picY, null);
-                    invalidate();
                     break;
                 case 2:
-                     canvas.translate(-150, 200);
-                     canvas.drawBitmap(picture, picX, picY, null);
-                    invalidate();
+                    canvas.translate(-150, 200);
+                    canvas.drawBitmap(picture, picX, picY, null);
+                    break;
                 case 3:
-                     canvas.scale(2, 2, cenX, cenY);
-                     canvas.drawBitmap(picture, picX, picY, null);
-                    invalidate();
+                    canvas.scale(2, 2, cenX, cenY);
+                    canvas.drawBitmap(picture, picX, picY, null);
                     break;
                 case 4:
-                     canvas.skew (0.3f, 0.3f);
-                     canvas.drawBitmap(picture, picX, picY, null);
-                    invalidate();
+                    canvas.skew (0.3f, 0.3f);
+                    canvas.drawBitmap(picture, picX, picY, null);
                     break;
             }
 

@@ -45,7 +45,6 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
                 setResult(Activity.RESULT_CANCELED, intent);
                 finish();
                 break;
-
         }
     }
 }

@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 public class ReviewItemView extends LinearLayout {
 
     ImageView ivUser;
-
     TextView tvUserId;
     TextView tvRegisteTime;
     TextView tvReviewContent;

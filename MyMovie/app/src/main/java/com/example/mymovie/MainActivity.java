@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public int getCount() {
             // 최근 3개만 보여주기
-            return 3;
+            return 2;
         }
 
         public void addItem(ReviewItem item){

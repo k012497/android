@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/nav_header"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/main_background">
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/nav_header_desc"
+                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:src="@drawable/profile"/>
+
+            <TextView
+                android:id="@+id/tvUserId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:text="user"/>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="user@email.com" />
+
+        </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:background="#A88C8C"
+        android:id="@+id/drawerMenu"
+        app:menu="@menu/drawer_menu"
+        >
+    </com.google.android.material.navigation.NavigationView>
+
+</LinearLayout>

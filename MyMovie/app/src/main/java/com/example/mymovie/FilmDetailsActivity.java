@@ -3,7 +3,6 @@ package com.example.mymovie;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 
 // listView height wrap_content로 하면 1개만 나옴
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class FilmDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnShowAll;
     ImageView ivThumbUp, ivThumbDown;
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.film_details);
 
         ivThumbUp = findViewById(R.id.ivThumbUp);
         ivThumbDown = findViewById(R.id.ivThumbDown);

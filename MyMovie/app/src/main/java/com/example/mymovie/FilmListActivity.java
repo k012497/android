@@ -1,6 +1,5 @@
 package com.example.mymovie;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,13 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 
-public class FilmListActivity extends AppCompatActivity implements View.OnClickListener {
+public class FilmListActivity extends Fragment implements View.OnClickListener {
 
     Button btnDetails;
     ImageView ivPoster;
@@ -34,52 +35,28 @@ public class FilmListActivity extends AppCompatActivity implements View.OnClickL
 
     static ArrayList<FilmItem> filmItems = new ArrayList<FilmItem>();
 
-//    public void setIvPoster(ImageView ivPoster) {
-//        this.ivPoster = ivPoster;
-//    }
-//
-//    public void setTvCount(TextView tvCount) {
-//        this.tvCount = tvCount;
-//    }
-//
-//    public void setTvRating(TextView tvRating) {
-//        this.tvRating = tvRating;
-//    }
-//
-//    public void setTvTitle(TextView tvTitle) {
-//        this.tvTitle = tvTitle;
-//    }
-//
-//    public void setTvDateReleased(TextView tvDateReleased) {
-//        this.tvDateReleased = tvDateReleased;
-//    }
-//
-//    public void setTvBookingRate(TextView tvBookingRate) {
-//        this.tvBookingRate = tvBookingRate;
-//    }
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_pager);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
-        viewPager = findViewById(R.id.viewPager);
+        viewPager = view.findViewById(R.id.viewPager);
+        filmItems.add(new FilmItem(1, "군도", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image1));
+        filmItems.add(new FilmItem(2, "공조", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image2));
+        filmItems.add(new FilmItem(3, "더킹", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image3));
+        filmItems.add(new FilmItem(4, "레지던스 이블", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image4));
+        filmItems.add(new FilmItem(5, "럭키", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image5));
+        filmItems.add(new FilmItem(6, "아수라", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image6));
 
-        filmItems.add(new FilmItem("군도", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image1));
-        filmItems.add(new FilmItem("공조", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image2));
-        filmItems.add(new FilmItem("더킹", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image3));
-        filmItems.add(new FilmItem("레지던스 이블", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image4));
-        filmItems.add(new FilmItem("럭키", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image5));
-        filmItems.add(new FilmItem("아수라", "2014.1.1", "1.8%", "15세 관람가", R.drawable.image6));
-
-        // 주의!@ 어댑터 객체 만들기 전에 데이터를 넣어야 함. 안 그러면 어댑터 만들어졌을 때 카운트랑 실제 데이터 개수가 맞지 않아서 예외 발생!
-        viewPagerAdapter = new ViewPagerAdapter(this);
+        // 주의!@ 어댑터 객체 만들기 전에 데이터를 넣어야 함.
+        // 안 그러면 어댑터 만들어졌을 때 카운트랑 실제 데이터 개수가 맞지 않아서 예외 발생!
+        viewPagerAdapter = new ViewPagerAdapter(getContext());
         viewPager.setAdapter(viewPagerAdapter);
+        return view;
     }
 
     class ViewPagerAdapter extends PagerAdapter {
 
-        int count = 1;
 
         private boolean doNotifyDataSetChangedOnce = false;
         Context mContext;
@@ -108,7 +85,7 @@ public class FilmListActivity extends AppCompatActivity implements View.OnClickL
                 FilmItem filmItem = filmItems.get(position);
                 tvTitle.setText(filmItem.getTitle());
                 ivPoster.setImageResource(filmItem.getPosterImage());
-                tvCount.setText(String.valueOf(count++) + ". ");
+                tvCount.setText(filmItem.getCount() + ". ");
                 tvRating.setText(filmItem.getRating());
                 tvDateReleased.setText(filmItem.getDateReleased());
                 tvBookingRate.setText(filmItem.getBookingRate());
@@ -142,13 +119,11 @@ public class FilmListActivity extends AppCompatActivity implements View.OnClickL
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return (view == (View)object);
         }
-
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(getContext(), FilmDetailsActivity.class);
         startActivity(intent);
-
     }
 }

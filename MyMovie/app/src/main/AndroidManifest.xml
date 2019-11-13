@@ -9,19 +9,25 @@
         android:roundIcon="@drawable/ic_app"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".FilmDetailsActivity">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+
         </activity>
         <activity
             android:name=".WriteReviewActivity"
-            android:label="@string/write_review"></activity>
+            android:label="@string/write_review" />
         <activity
             android:name=".ShowReviewActivity"
-            android:label="@string/show_review"></activity>
+            android:label="@string/show_review" />
         <activity android:name=".FilmListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

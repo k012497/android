@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/iv01"
+            style="@style/image"
+            android:src="@drawable/pic1"/>
+        <ImageView
+            android:id="@+id/iv02"
+            style="@style/image"
+            android:src="@drawable/pic2"/>
+        <ImageView
+            android:id="@+id/iv03"
+            style="@style/image"
+            android:src="@drawable/pic3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/iv04"
+            style="@style/image"
+            android:src="@drawable/pic4"/>
+        <ImageView
+            android:id="@+id/iv05"
+            style="@style/image"
+            android:src="@drawable/pic5"/>
+        <ImageView
+            android:id="@+id/iv06"
+            style="@style/image"
+            android:src="@drawable/pic6"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/iv07"
+            style="@style/image"
+            android:src="@drawable/pic7"/>
+        <ImageView
+            android:id="@+id/iv08"
+            style="@style/image"
+            android:src="@drawable/pic8"/>
+        <ImageView
+            android:id="@+id/iv09"
+            style="@style/image"
+            android:src="@drawable/pic9"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B49CDF"
+        android:text="show result" />
+</LinearLayout>

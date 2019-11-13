@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="20dp"
+    android:gravity="center">
+
+    <TableRow>
+        <TextView
+            android:id="@+id/tvRank1"
+            android:layout_weight="1"
+            android:layout_span="2"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:background="#96B8A1"/>
+    </TableRow>
+
+    <TableRow>
+        <ImageView
+            android:id="@+id/ivRank1"
+            android:layout_width="120dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_span="2"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            android:background="#96B8A1"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv01"
+            android:text="picture 1"
+            android:textSize="15sp" />
+        <RatingBar
+            android:id="@+id/rBar01"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv02"
+            android:text="picture 2"
+            android:textSize="15sp"/>
+        <RatingBar
+            android:id="@+id/rBar02"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv03"
+            android:text="picture 3"
+            android:textSize="15sp"/>
+        <RatingBar
+            android:id="@+id/rBar03"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv04"
+            android:text="picture 4"
+            android:textSize="15sp" />
+        <RatingBar
+            android:id="@+id/rBar04"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv05"
+            android:text="picture 5"
+            android:textSize="15sp" />
+        <RatingBar
+            android:id="@+id/rBar05"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv06"
+            android:text="picture 6"
+            android:textSize="15sp" />
+        <RatingBar
+            android:id="@+id/rBar06"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv07"
+            android:text="picture 7"
+            android:textSize="15sp" />
+        <RatingBar
+            android:id="@+id/rBar07"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv08"
+            android:text="picture 8"
+            android:textSize="15sp" />
+        <RatingBar
+            android:id="@+id/rBar08"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv09"
+            android:text="picture 9"
+            android:textSize="15sp"/>
+        <RatingBar
+            android:id="@+id/rBar09"
+            android:layout_width="wrap_content"
+            style="?android:ratingBarStyleSmall"
+            android:layout_gravity="right"/>
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_weight="1"
+            android:layout_span="2"
+            android:layout_marginTop="30dp"
+            android:background="#B49CDF"
+            android:text="back to choose"/>
+    </TableRow>
+
+</TableLayout>

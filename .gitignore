@@ -1,0 +1,14 @@
+
+NavigationDrawerTest/app/src/main/res/values/colors.xml
+NavigationDrawerTest/app/src/main/res/values/dimens.xml
+NavigationDrawerTest/app/src/main/res/values/drawables.xml
+NavigationDrawerTest/app/src/main/res/values/strings.xml
+NavigationDrawerTest/app/src/main/res/values/styles.xml
+NavigationDrawerTest/app/src/test/java/com/example/navigationdrawertest/ExampleUnitTest.java
+NavigationDrawerTest/build.gradle
+NavigationDrawerTest/gradle.properties
+NavigationDrawerTest/gradle/wrapper/gradle-wrapper.jar
+NavigationDrawerTest/gradle/wrapper/gradle-wrapper.properties
+NavigationDrawerTest/gradlew
+NavigationDrawerTest/gradlew.bat
+NavigationDrawerTest/settings.gradle

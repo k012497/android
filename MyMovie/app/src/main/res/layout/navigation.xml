@@ -47,7 +47,7 @@
         android:layout_gravity="left"
         android:background="#A88C8C"
         android:id="@+id/drawerMenu"
-        app:menu="@menu/drawer_menu"
+        app:menu="@menu/menu_drawer"
         >
     </com.google.android.material.navigation.NavigationView>
 

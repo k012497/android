@@ -13,8 +13,8 @@
         android:layout_height="match_parent" />
 
     <FrameLayout
-        android:name="android.navigation.fragment.NavHostFragment"
         android:id="@+id/frameLayout"
+        android:name="android.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -28,6 +28,6 @@
         android:fitsSystemWindows="true"
         android:background="#999999"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/drawer_menu"/>
+        app:menu="@menu/menu_drawer"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

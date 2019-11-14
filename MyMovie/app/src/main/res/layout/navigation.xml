@@ -46,9 +46,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:background="#A88C8C"
-        android:id="@+id/drawerMenu"
-        app:menu="@menu/menu_drawer"
-        >
+        android:id="@+id/nav_view"
+        app:menu="@menu/menu_drawer">
+
     </com.google.android.material.navigation.NavigationView>
 
 </LinearLayout>

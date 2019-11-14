@@ -4,11 +4,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
@@ -26,7 +28,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private View navView;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
 
@@ -37,9 +38,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigationView = findViewById(R.id.nav_view);
         drawerLayout = findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, "Open navigation drawer", "Close navigation drawer");
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.nav_list);
+
+
+
         this.InitializeLayout();
 
         // 이렇게 말고 자동으로 메뉴 선택돼서 첫 화면 뜨게하는 법?
@@ -49,15 +54,13 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.frameLayout, fragmentActivity);
         ft.commit();
 
-//        navView = findViewById(R.id.nav_list);
-//        navView.callOnClick();
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setIcon(R.drawable.ic_hamburger_menu);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().show();
     }
+
 
     @Override
     protected void onStart() {
@@ -97,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void InitializeLayout() {
+//        LayoutInflater inflater = (LayoutInflater) getSystemService(getApplicationContext().LAYOUT_INFLATER_SERVICE);
+//        View view = inflater.inflate(R.layout.navigation, null);
+//        navigationView = view.findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -124,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
     @Override
@@ -135,6 +143,4 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
-
 }

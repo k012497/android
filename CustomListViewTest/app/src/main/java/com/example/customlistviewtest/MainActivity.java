@@ -28,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        list.add(new ListItemVO(R.drawable.dog, "강아지"));
-        list.add(new ListItemVO(R.drawable.dog, "망아지"));
-        list.add(new ListItemVO(R.drawable.dog, "송아지"));
-        list.add(new ListItemVO(R.drawable.dog, "강아지"));
-        list.add(new ListItemVO(R.drawable.dog, "망아지"));
-        list.add(new ListItemVO(R.drawable.dog, "송아지"));
+        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "강아지", "멍멍"));
+        list.add(new ListItemVO(R.drawable.gorilla, R.drawable.heart, "망아지", "알알"));
+        list.add(new ListItemVO(R.drawable.rabbit, R.drawable.heart, "송아지","깔깔"));
+        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "강아지","왈왈"));
+        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "망아지","알알"));
+        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "송아지","알알"));
 
         listView = findViewById(R.id.listView);
 
@@ -64,13 +64,17 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_item, null);
 
-            ImageView imageView = view.findViewById(R.id.imageView);
-            TextView textView = view.findViewById(R.id.textView);
+            ImageView imageView1 = view.findViewById(R.id.imageView1);
+            ImageView imageView2 = view.findViewById(R.id.imageView2);
+            TextView textView1 = view.findViewById(R.id.textView1);
+            TextView textView2 = view.findViewById(R.id.textView2);
 
             ListItemVO data = list.get(position);
 
-            imageView.setImageResource(data.getImageResId());
-            textView.setText(data.getStringData());
+            imageView1.setImageResource(data.getImageResId1());
+            imageView2.setImageResource(data.getImageResId2());
+            textView1.setText(data.getStringData1());
+            textView2.setText(data.getStringData2());
 
             return view;
         }

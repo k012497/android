@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listView = findViewById(R.id.listView);
+
         list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "강아지", "멍멍"));
         list.add(new ListItemVO(R.drawable.gorilla, R.drawable.heart, "망아지", "알알"));
         list.add(new ListItemVO(R.drawable.rabbit, R.drawable.heart, "송아지","깔깔"));
         list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "강아지","왈왈"));
         list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "망아지","알알"));
         list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "송아지","알알"));
-
-        listView = findViewById(R.id.listView);
 
         ListAdapter adapter = new ListAdapter();
         listView.setAdapter(adapter);

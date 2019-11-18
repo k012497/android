@@ -1,5 +1,7 @@
 package com.example.viewpagertest;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -9,11 +11,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
+        Log.d("Main", "make Adapter");
     }
 
     // 프래그먼트 교체를 보여주는 역할
     @Override
     public Fragment getItem(int position) {
+        Log.d("Main", "getItem");
         switch (position){
             case 0: return Fragment1.newInstance();
             case 1: return Fragment2.newInstance();
@@ -24,6 +28,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
+        Log.d("Main", "getCount");
         return 3;
     }
 
@@ -31,6 +36,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
+        Log.d("Main", "getPageTitle");
         switch (position){
             case 0: return "1";
             case 1: return "2";

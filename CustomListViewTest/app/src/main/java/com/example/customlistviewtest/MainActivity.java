@@ -1,26 +1,22 @@
 package com.example.customlistviewtest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    ListView listView;
+    RecyclerView recyclerView;
     ArrayList<ListItemVO> list = new ArrayList<ListItemVO>();
 
     @Override
@@ -28,56 +24,68 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = findViewById(R.id.listView);
+        recyclerView = findViewById(R.id.recyclerView);
 
-        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "강아지", "멍멍"));
-        list.add(new ListItemVO(R.drawable.gorilla, R.drawable.heart, "망아지", "알알"));
-        list.add(new ListItemVO(R.drawable.rabbit, R.drawable.heart, "송아지","깔깔"));
-        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "강아지","왈왈"));
-        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "망아지","알알"));
-        list.add(new ListItemVO(R.drawable.dog, R.drawable.heart, "송아지","알알"));
+        list.add(new ListItemVO(R.drawable.dog, "강아지", "멍멍"));
+        list.add(new ListItemVO(R.drawable.gorilla, "망아지", "알알"));
+        list.add(new ListItemVO(R.drawable.rabbit, "송아지","깔깔"));
+        list.add(new ListItemVO(R.drawable.dog, "강아지","왈왈"));
+        list.add(new ListItemVO(R.drawable.dog, "망아지","알알"));
+        list.add(new ListItemVO(R.drawable.dog, "송아지","알알"));
 
-        ListAdapter adapter = new ListAdapter();
-        listView.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(R.layout.list_item, list);
+        recyclerView.setAdapter(recyclerAdapter);
 
     }
 
-    private class ListAdapter extends BaseAdapter{
+    public class RecyclerAdapter extends RecyclerView.Adapter<MainActivity.CustomHolderView>{
+        int layout = 0;
+        ArrayList<ListItemVO> list = new ArrayList<ListItemVO>();
 
+        public RecyclerAdapter(int layout, ArrayList<ListItemVO> list) {
+            Log.d("MainActivity", "make Adapter");
+            this.layout = layout;
+            this.list = list;
+        }
+
+        @NonNull
         @Override
-        public int getCount() {
-            return list.size();
+        public CustomHolderView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+            CustomHolderView customHolderView = new CustomHolderView(view);
+
+            Log.d("MainActivity", "createViewHolder");
+
+            return customHolderView;
         }
 
         @Override
-        public Object getItem(int position) {
-            return list.get(position);
+        public void onBindViewHolder(@NonNull final MainActivity.CustomHolderView holder, final int position) {
+            holder.imageView.setImageResource(list.get(position).getImageResId());
+            holder.textView1.setText(list.get(position).getStringData1());
+            holder.textView2.setText(list.get(position).getStringData2());
+            holder.itemView.setTag(position);
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.list_item, null);
-
-            ImageView imageView1 = view.findViewById(R.id.imageView1);
-            ImageView imageView2 = view.findViewById(R.id.imageView2);
-            TextView textView1 = view.findViewById(R.id.textView1);
-            TextView textView2 = view.findViewById(R.id.textView2);
-
-            ListItemVO data = list.get(position);
-
-            imageView1.setImageResource(data.getImageResId1());
-            imageView2.setImageResource(data.getImageResId2());
-            textView1.setText(data.getStringData1());
-            textView2.setText(data.getStringData2());
-
-            return view;
+        public int getItemCount() {
+            Log.d("MainActivity", "getCount");
+            return list != null ? list.size() : 0;
         }
     }
 
+    public class CustomHolderView extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView textView1, textView2;
+
+        public CustomHolderView(@NonNull View itemView) {
+            super(itemView);
+            Log.d("MainActivity", "make CustomHolderView");
+            imageView = itemView.findViewById(R.id.imageView);
+            textView1 = itemView.findViewById(R.id.textView1);
+            textView2 = itemView.findViewById(R.id.textView2);
+        }
+    }
 }

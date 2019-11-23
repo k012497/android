@@ -36,10 +36,9 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
     View view;
 
     private Button btnPlay, btnStop, btnAdd;
-    private TextView tvSelectedSong, tvNowPlaying;
+    private TextView tvSelectedSong;
     EditText edtSinger, edtGenre, edtAlbumArt;
     private ListView listView;
-    private ImageView ivPlaylist;
     private MediaPlayer mediaPlayer;
 
     private String selectedMP3;
@@ -65,7 +64,6 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
         btnPlay = view.findViewById(R.id.btnPlay);
         btnStop = view.findViewById(R.id.btnStop);
         btnAdd = view.findViewById(R.id.btnAdd);
-        ivPlaylist = view.findViewById(R.id.ivPlaylist);
 
         loadFromSDCard();
         myDBHelper = new MyDBHelper(container.getContext());
@@ -84,7 +82,6 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
         btnPlay.setOnClickListener(this);
         btnStop.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
-        ivPlaylist.setOnClickListener(this);
         listView.setOnItemClickListener(this);
 
         return view;
@@ -106,9 +103,6 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-//            case R.id.ivPlaylist:
-//                Intent intent = new Intent(SDCardFragment.this, MyPlaylistActivity.class);
-//                startActivity(intent);
             case R.id.btnAdd:
                 if(mDAO.isExist(selectedMP3) != null) {
                     mDAO.toastDisplay("이미 추가된 곡입니다");

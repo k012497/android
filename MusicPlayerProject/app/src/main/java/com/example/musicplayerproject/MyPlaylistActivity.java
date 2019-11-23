@@ -3,16 +3,22 @@ package com.example.musicplayerproject;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +38,22 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
     View view;
     Context context;
     private RecyclerView recyclerView;
-    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked;
+    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle, tvNowSinger;
     private LinearLayout linearLayout;
-    private ImageView imageView;
-    private LinearLayout llNowPlaying;
+    private ImageView imageView, ivAlbum;;
+    private LinearLayout llButton;
+
+    ImageButton ibtClose, ibtPlay, ibtPause, ibtStop;
+    SeekBar seekBar;
+    boolean paused = false;
+
+    String selectedTitle;
+    static MediaPlayer mediaPlayer;
+    private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
+
+    SlidingDrawer slidingDrawer;
+    SlidingDrawer.OnDrawerCloseListener drawerClosed;
+    SlidingDrawer.OnDrawerOpenListener drawerOpened;
 
     RecyclerView.LayoutManager layoutManager;
     RecyclerViewAdapter adapter;
@@ -44,18 +62,20 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
     String extractedName;
 
     public static MyPlaylistActivity newInstance(){
-        MyPlaylistActivity fragment1 = new MyPlaylistActivity();
-        return fragment1;
+        MyPlaylistActivity fragment2 = new MyPlaylistActivity();
+        return fragment2;
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.my_playlist, container, false);
         context = container.getContext();
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        llNowPlaying = view.findViewById(R.id.llNowPlaying);
+        llButton = view.findViewById(R.id.llButton);
+        slidingDrawer = view.findViewById(R.id.slidingDrawer);
+        tvNowTitle = view.findViewById(R.id.tvNowTitle);
 
         // set Adapter for RecyclerView
         layoutManager = new LinearLayoutManager(context);
@@ -65,18 +85,39 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
 
         loadMyListData(1);
 
-        llNowPlaying.setOnTouchListener(this);
-        return super.onCreateView(inflater, container, savedInstanceState);
+        setDrawerOpendAndClosed();
+
+        slidingDrawer.setOnDrawerOpenListener(drawerOpened);
+        slidingDrawer.setOnDrawerCloseListener(drawerClosed);
+
+        return view;
+    }
+
+    private void setDrawerOpendAndClosed() {
+        drawerClosed = new SlidingDrawer.OnDrawerCloseListener() {
+            @Override
+            public void onDrawerClosed() {
+                llButton.setVisibility(View.VISIBLE);
+                tvNowTitle.setVisibility(View.VISIBLE);
+            }
+        };
+
+        drawerOpened= new SlidingDrawer.OnDrawerOpenListener() {
+            @Override
+            public void onDrawerOpened() {
+                llButton.setVisibility(View.INVISIBLE);
+                tvNowTitle.setVisibility(View.INVISIBLE);
+            }
+        };
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         menu.add(0,1,0,"등록 순");
         menu.add(0,2,0,"가나다 순");
         menu.add(0,3,0,"많이 들은 순");
-
-        return true;
     }
 
     @Override
@@ -177,14 +218,16 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
                     mDAO.updateCount(music.getTitle(), ++count);
                     tvCountClicked.setText(String.valueOf(count));
 
-                    // 재생중인 노래가 있으면 멈추
+                    // 재생중인 노래가 있으면 멈추기
                     if(mediaPlayer != null && mediaPlayer.isPlaying()) mediaPlayer.stop();
 
+                    slidingDrawer.open();
+
                     // 음악재생 Intent
-                    Intent intent = new Intent(context, MusicPlayingActivity.class);
-                    intent.putExtra("title", music.getTitle());
-                    intent.putExtra("singer", music.getSinger());
-                    startActivity(intent);
+//                    Intent intent = new Intent(context, MusicPlayingActivity.class);
+//                    intent.putExtra("title", music.getTitle());
+//                    intent.putExtra("singer", music.getSinger());
+//                    startActivity(intent);
 
 //                    Toast.makeText(MyPlaylistActivity.this, music.getTitle(), Toast.LENGTH_SHORT).show();
 

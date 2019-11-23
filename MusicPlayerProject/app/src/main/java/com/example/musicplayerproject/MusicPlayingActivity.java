@@ -40,7 +40,6 @@ public class MusicPlayingActivity extends AppCompatActivity implements View.OnCl
         tvTitle = findViewById(R.id.tvTitle);
         tvSinger = findViewById(R.id.tvSinger);
         seekBar = findViewById(R.id.seekBar);
-        ibtClose = findViewById(R.id.ibtClose);
         ibtPlay = findViewById(R.id.ibtPlay);
         ibtPause = findViewById(R.id.ibtPause);
         ibtStop = findViewById(R.id.ibtStop);
@@ -60,12 +59,6 @@ public class MusicPlayingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.ibtClose :
-                Intent intent = new Intent(MusicPlayingActivity.this, MyPlaylistActivity.class);
-                intent.putExtra("nowPlaying", tvTitle.getText().toString());
-                startActivity(intent);
-                break;
-
             case R.id.ibtPlay:
                 mediaPlayer = new MediaPlayer();
                 try {

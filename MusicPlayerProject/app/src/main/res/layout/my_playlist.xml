@@ -4,42 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/llNowPlaying"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/llNowPlaying"
+    <SlidingDrawer
+        android:id="@+id/slidingDrawer"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/ivPlaying"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/album"/>
-
-        <TextView
-            android:id="@+id/tvNowTitle"
+        android:layout_height="match_parent"
+        android:content="@id/music_playing"
+        android:handle="@id/llHandle">
+        <LinearLayout
+            android:id="@+id/llHandle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:textSize="24dp"
-            android:text="NOW" />
+            android:layout_height="80dp"
+            android:background="@drawable/rounded_background"
+            android:orientation="vertical"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <TextView
+                android:id="@+id/tvNowTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="italic"
+                android:textSize="20dp"
+                android:textColor="#ffffff"
+                android:text="NOW" />
+            <LinearLayout
+                android:id="@+id/llButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageButton
+                    style="@style/image_button"
+                    android:src="@drawable/rewind"/>
+                <ImageButton
+                    style="@style/image_button"
+                    android:src="@drawable/play"/>
+                <ImageButton
+                    style="@style/image_button"
+                    android:src="@drawable/forward"/>
+            </LinearLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+        <include android:id="@+id/music_playing" layout="@layout/music_playing"/>
 
+    </SlidingDrawer>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

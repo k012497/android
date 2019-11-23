@@ -20,7 +20,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         Log.d("Main", "getItem");
         switch (position){
             case 0: return SDCardFragment.newInstance();
-            case 1: return Fragment2.newInstance();
+            case 1: return MyPlaylistActivity.newInstance();
             default: return null;
         }
     }
@@ -37,8 +37,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         Log.d("Main", "getPageTitle");
         switch (position){
-            case 0: return "1";
-            case 1: return "2";
+            case 0: return "SD Card";
+            case 1: return "My List";
             default: return null;
         }
     }

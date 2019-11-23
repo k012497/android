@@ -8,12 +8,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static com.example.musicplayerproject.SDCardFragment.items;
 
 public class MusicItemDAO extends MainActivity {
     private SQLiteDatabase sqLiteDatabase;
     private Context context;
     private MyDBHelper myDBHelper = null;
+    static ArrayList<MusicItemDTO> items = new ArrayList<MusicItemDTO>();
 
     public MusicItemDAO(Context context) {
         this.context = context;

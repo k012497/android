@@ -44,7 +44,7 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
     private String selectedMP3;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
     private ArrayList<String> mp3List = new ArrayList<String>();
-    static ArrayList<MusicItemDTO> items = new ArrayList<MusicItemDTO>();
+//    static ArrayList<MusicItemDTO> items = new ArrayList<MusicItemDTO>();
 
     private MusicItemDAO mDAO;
     private MyDBHelper myDBHelper;

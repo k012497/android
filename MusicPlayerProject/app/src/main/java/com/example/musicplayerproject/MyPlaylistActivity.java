@@ -2,10 +2,11 @@ package com.example.musicplayerproject;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,42 +25,48 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
-import static com.example.musicplayerproject.MusicPlayingActivity.mediaPlayer;
+import static com.example.musicplayerproject.MusicItemDAO.items;
 
-public class MyPlaylistActivity extends Fragment implements View.OnTouchListener {
-    View view;
-    Context context;
+public class MyPlaylistActivity extends Fragment {
+    private View view;
+    private Context context;
     private RecyclerView recyclerView;
-    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle, tvNowSinger;
+    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle;
     private LinearLayout linearLayout;
-    private ImageView imageView, ivAlbum;;
+    private ImageView imageView;
     private LinearLayout llButton;
 
-    ImageButton ibtClose, ibtPlay, ibtPause, ibtStop;
-    SeekBar seekBar;
+    private ConstraintLayout music_playing;
+
+    private ImageView ivAlbum;
+    private TextView tvTitlePlaying, tvSingerPlaying;
+    private ImageButton ibtPlay, ibtPause, ibtStop, ibtPlayOrPause, ibtPrev, ibtNext;
+    private SeekBar seekBar;
     boolean paused = false;
 
+    private SlidingDrawer slidingDrawer;
+    private SlidingDrawer.OnDrawerCloseListener drawerClosed;
+    private SlidingDrawer.OnDrawerOpenListener drawerOpened;
+
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerViewAdapter adapter;
+
+    private String extractedName;
+
     String selectedTitle;
-    static MediaPlayer mediaPlayer;
+    MediaPlayer mediaPlayer;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
 
-    SlidingDrawer slidingDrawer;
-    SlidingDrawer.OnDrawerCloseListener drawerClosed;
-    SlidingDrawer.OnDrawerOpenListener drawerOpened;
-
-    RecyclerView.LayoutManager layoutManager;
-    RecyclerViewAdapter adapter;
-
-    ArrayList<MusicItemDTO> items;
-    String extractedName;
+    Thread thread;
 
     public static MyPlaylistActivity newInstance(){
         MyPlaylistActivity fragment2 = new MyPlaylistActivity();
@@ -72,10 +79,21 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
         view = inflater.inflate(R.layout.my_playlist, container, false);
         context = container.getContext();
 
+        music_playing = view.findViewById(R.id.music_playing);
         recyclerView = view.findViewById(R.id.recyclerView);
         llButton = view.findViewById(R.id.llButton);
         slidingDrawer = view.findViewById(R.id.slidingDrawer);
         tvNowTitle = view.findViewById(R.id.tvNowTitle);
+        tvTitlePlaying = view.findViewById(R.id.tvTitlePlaying);
+        tvSingerPlaying = view.findViewById(R.id.tvSingerPlaying);
+        seekBar = view.findViewById(R.id.seekBar);
+        ibtPlay = view.findViewById(R.id.ibtPlay);
+        ibtStop = view.findViewById(R.id.ibtStop);
+        ibtPause = view.findViewById(R.id.ibtPause);
+        ibtPrev = view.findViewById(R.id.ibtPrev);
+        ibtNext = view.findViewById(R.id.ibtNext);
+        ibtPlayOrPause = view.findViewById(R.id.ibtPlayOrPause);
+        ivAlbum = view.findViewById(R.id.ivAlbum);
 
         // set Adapter for RecyclerView
         layoutManager = new LinearLayoutManager(context);
@@ -83,34 +101,18 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
         adapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
 
+        setHasOptionsMenu(true);
+
         loadMyListData(1);
 
+        // set drawer
         setDrawerOpendAndClosed();
-
         slidingDrawer.setOnDrawerOpenListener(drawerOpened);
         slidingDrawer.setOnDrawerCloseListener(drawerClosed);
 
+
         return view;
     }
-
-    private void setDrawerOpendAndClosed() {
-        drawerClosed = new SlidingDrawer.OnDrawerCloseListener() {
-            @Override
-            public void onDrawerClosed() {
-                llButton.setVisibility(View.VISIBLE);
-                tvNowTitle.setVisibility(View.VISIBLE);
-            }
-        };
-
-        drawerOpened= new SlidingDrawer.OnDrawerOpenListener() {
-            @Override
-            public void onDrawerOpened() {
-                llButton.setVisibility(View.INVISIBLE);
-                tvNowTitle.setVisibility(View.INVISIBLE);
-            }
-        };
-    }
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -136,6 +138,32 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
         return true;
     }
 
+
+    private void setDrawerOpendAndClosed() {
+        drawerClosed = new SlidingDrawer.OnDrawerCloseListener() {
+            @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+            @Override
+            public void onDrawerClosed() {
+                llButton.setVisibility(View.VISIBLE);
+                tvNowTitle.setVisibility(View.VISIBLE);
+            }
+        };
+
+        drawerOpened= new SlidingDrawer.OnDrawerOpenListener() {
+            @Override
+            public void onDrawerOpened() {
+                llButton.setVisibility(View.INVISIBLE);
+                tvNowTitle.setVisibility(View.INVISIBLE);
+                music_playing.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
+            }
+        };
+    }
+
     private void loadMyListData(int menu) {
         MusicItemDAO mDAO = new MusicItemDAO(context);
         switch (menu){
@@ -152,7 +180,7 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
                 items = mDAO.selectAllByCount();
                 break;
         }
-        adapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
     }
 
     public String trimFileName(String title) {
@@ -173,13 +201,13 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
         return extractedName;
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
+    public void buttonSetEnabled(boolean play, boolean pause, boolean stop){
+        ibtPlay.setEnabled(play);
+        ibtPause.setEnabled(pause);
+        ibtStop.setEnabled(stop);
     }
 
-    private class RecyclerViewAdapter extends RecyclerView.Adapter<CustomViewHolder>{
-
+    private class RecyclerViewAdapter extends RecyclerView.Adapter<CustomViewHolder> implements View.OnClickListener {
         @NonNull
         @Override
         public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -188,49 +216,84 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
             return customViewHolder;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
             final MusicItemDTO music = items.get(position);
-            String musicTitle = trimFileName(music.getTitle());
+            final String musicTitle = trimFileName(music.getTitle());
             tvTitle.setText(musicTitle);
             tvSinger.setText(music.getSinger());
             tvGenre.setText(music.getGenre());
             tvCountClicked.setText(String.valueOf(music.getCountClicked()));
+
+            ibtPlay.setOnClickListener(this);
+            ibtPause.setOnClickListener(this);
+            ibtStop.setOnClickListener(this);
+
+            if(tvSingerPlaying.equals("-")){
+                buttonSetEnabled(true, false, false);
+            }
+
+            ibtPlay.callOnClick();
 
             switch (music.getAlbumArt()){
                 case "hyukoh":
                     imageView.setImageResource(R.drawable.hyukoh);
                     break;
 
+                case "panda":
+                    imageView.setImageResource(R.drawable.panda_bear);
+                    break;
+
+                case "22":
+                    imageView.setImageResource(R.drawable.twenty_two);
+                    break;
+
+                case "24":
+                    imageView.setImageResource(R.drawable.twenty_four);
+                    break;
+
                 default:
-                    imageView.setImageResource(R.drawable.album);
+                    imageView.setImageResource(R.drawable.default_album);
                     break;
             }
 
-            // 리사이클러뷰 아이템 클릭
+            // 리사이클러뷰 아이템 클릭 시
             linearLayout.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
                 @Override
                 public void onClick(View v) {
+                    slidingDrawer.open();
+                    if(selectedTitle == music.getTitle()){
+                        slidingDrawer.open();
+                        return;
+                    }
                     // 클릭 수 증가
                     MusicItemDAO mDAO = new MusicItemDAO(context);
                     MusicItemDTO mvo = mDAO.isExist(music.getTitle());
-                    int count = mvo.getCountClicked();
-                    mDAO.updateCount(music.getTitle(), ++count);
-                    tvCountClicked.setText(String.valueOf(count));
+                    int newCount = mvo.getCountClicked() + 1;
+                    mDAO.updateCount(music.getTitle(), newCount);
+                    tvCountClicked.setText(String.valueOf(newCount));
+//                    if(menuitem == null){
+//                        loadMyListData(1);
+//                    }else{
+//                        loadMyListData(menuitem.getItemId());
+//                    }
+
+                    tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
 
                     // 재생중인 노래가 있으면 멈추기
-                    if(mediaPlayer != null && mediaPlayer.isPlaying()) mediaPlayer.stop();
+                    if (mediaPlayer != null && mediaPlayer.isPlaying()){
+                        mediaPlayer.stop();
+                    }
 
                     slidingDrawer.open();
+                    tvTitlePlaying.setText(musicTitle);
+                    tvSingerPlaying.setText(music.getSinger());
+                    tvTitlePlaying.setSelected(true);
+                    selectedTitle = music.getTitle();
 
-                    // 음악재생 Intent
-//                    Intent intent = new Intent(context, MusicPlayingActivity.class);
-//                    intent.putExtra("title", music.getTitle());
-//                    intent.putExtra("singer", music.getSinger());
-//                    startActivity(intent);
-
-//                    Toast.makeText(MyPlaylistActivity.this, music.getTitle(), Toast.LENGTH_SHORT).show();
-
+                    ibtPlay.callOnClick();
                 }
             });
 
@@ -241,6 +304,8 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
                     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                     dialog.setTitle("Delete music");
                     dialog.setMessage("Are you sure to delete " + music.getTitle() + "?");
+                    Log.d("longclick position", position+"");
+                    Log.d("longclick position", items.get(position).getTitle());
                     dialog.setNegativeButton("delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -250,15 +315,66 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
                             adapter.notifyItemRemoved(position);
                         }
                     });
-                    dialog.setPositiveButton("cancel", null); // 삭제하고 다시 select해오는 이벤트 작성
+                    dialog.setPositiveButton("cancel", null);
                     dialog.show();
                     return true;
                 }
             });
         }
+
         @Override
         public int getItemCount() {
             return items != null ? items.size() : 0;
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.ibtPlay:
+                    if(selectedTitle == null) break;
+                    mediaPlayer = new MediaPlayer();
+                    try {
+                        mediaPlayer.setDataSource(MP3_PATH + selectedTitle);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+
+                        buttonSetEnabled(false, true, true);
+                        startUiThread();
+
+                    } catch (IOException e) {
+                        Log.e("btnPlay onClick", e.toString());
+                    }
+                    break;
+
+                case R.id.ibtPause:
+                    if(paused){
+                        // 일시정지중일 때
+                        mediaPlayer.start();
+                        tvNowTitle.setSelected(true);
+                        startUiThread();
+                        paused = false;
+                        ibtPause.setImageResource(R.drawable.pause);
+
+                    } else {
+                        // 일시정지중이 아닐 때
+                        mediaPlayer.pause();
+                        tvNowTitle.setSelected(false);
+                        Toast.makeText(context, "paused", Toast.LENGTH_SHORT).show();
+                        paused = true;
+                        ibtPause.setImageResource(R.drawable.pause_click);
+                    }
+                    buttonSetEnabled(false, true, true);
+                    break;
+
+                case R.id.ibtStop:
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    seekBar.setProgress(0);
+                    ibtPause.setImageResource(R.drawable.pause);
+                    paused = false;
+                    buttonSetEnabled(true, false, false);
+                    break;
+            }
         }
     }
 
@@ -275,4 +391,36 @@ public class MyPlaylistActivity extends Fragment implements View.OnTouchListener
         }
     }
 
+    public void startUiThread(){
+        thread = new Thread(){
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void run() {
+                if(mediaPlayer == null){
+                    return;
+                }
+                // 작업스레드 내에서 UI객체를 변경하기 위해
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        seekBar.setMax(mediaPlayer.getDuration());
+                        seekBar.setMin(0);
+                    }
+                });
+
+                while(mediaPlayer.isPlaying()){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ivAlbum.setRotation((float) Math.random()*360);
+                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        }
+                    }); // end of runOnUiThread
+                    SystemClock.sleep(200);
+
+                }// end of while
+            }
+        };
+        thread.start();
+    }
 }

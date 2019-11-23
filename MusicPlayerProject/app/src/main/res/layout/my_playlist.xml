@@ -13,6 +13,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +28,7 @@
         <LinearLayout
             android:id="@+id/llHandle"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/rounded_background"
             android:orientation="vertical"
             android:padding="4dp"
@@ -36,30 +37,41 @@
             app:layout_constraintStart_toStartOf="parent">
             <TextView
                 android:id="@+id/tvNowTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:layout_gravity="center"
+                android:paddingTop="3dp"
                 android:gravity="center"
-                android:textStyle="italic"
-                android:textSize="20dp"
-                android:textColor="#ffffff"
-                android:text="NOW" />
-            <LinearLayout
-                android:id="@+id/llButton"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <ImageButton
-                    style="@style/image_button"
-                    android:src="@drawable/rewind"/>
-                <ImageButton
-                    style="@style/image_button"
-                    android:src="@drawable/play"/>
-                <ImageButton
-                    style="@style/image_button"
-                    android:src="@drawable/forward"/>
-            </LinearLayout>
+                android:textStyle="italic"
+                android:textSize="18dp"
+                android:textColor="#ffffff"
+                android:text="Now Playing"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#6D80CA"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/ibtPrev"
+                style="@style/image_button"
+                android:src="@drawable/rewind"/>
+            <ImageButton
+                android:id="@+id/ibtPlayOrPause"
+                style="@style/image_button"
+                android:src="@drawable/play"/>
+            <ImageButton
+                android:id="@+id/ibtNext"
+                style="@style/image_button"
+                android:src="@drawable/forward"/>
         </LinearLayout>
 
         <include android:id="@+id/music_playing" layout="@layout/music_playing"/>

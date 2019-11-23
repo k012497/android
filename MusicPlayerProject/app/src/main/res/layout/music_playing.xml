@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/music_playing"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,24 +23,29 @@
             android:src="@drawable/album" />
 
         <TextView
-            android:id="@+id/tvNowTitle"
+            android:id="@+id/tvTitlePlaying"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:gravity="center"
-            android:text="title"
+            android:text="재생중인 노래 없음"
             android:textColor="#FFFFFF"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"/>
 
         <TextView
-            android:id="@+id/tvNowSinger"
+            android:id="@+id/tvSingerPlaying"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:text="singer"
+            android:text="-"
             android:textColor="#ffffff"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <SeekBar
             android:id="@+id/seekBar"

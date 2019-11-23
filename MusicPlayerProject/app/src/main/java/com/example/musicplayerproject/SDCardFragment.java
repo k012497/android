@@ -1,12 +1,9 @@
 package com.example.musicplayerproject;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -14,6 +11,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,13 +21,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SDCardFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+    Context context;
+    View view;
+
     private Button btnPlay, btnStop, btnAdd;
     private TextView tvSelectedSong, tvNowPlaying;
     EditText edtSinger, edtGenre, edtAlbumArt;
@@ -45,25 +50,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MusicItemDAO mDAO;
     private MyDBHelper myDBHelper;
 
+    public static SDCardFragment newInstance(){
+        SDCardFragment fragment1 = new SDCardFragment();
+        return fragment1;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.sdcard_fragment);
-        setTitle("뭐 들을래?");
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.sdcard_fragment, container, false);
+        context = container.getContext();
 
-        // 외부 저장장치 쓰기 권한 요청
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MODE_PRIVATE);
-
-        listView = findViewById(R.id.listView);
-        btnPlay = findViewById(R.id.btnPlay);
-        btnStop = findViewById(R.id.btnStop);
-        btnAdd = findViewById(R.id.btnAdd);
-        ivPlaylist = findViewById(R.id.ivPlaylist);
+        listView = view.findViewById(R.id.listView);
+        btnPlay = view.findViewById(R.id.btnPlay);
+        btnStop = view.findViewById(R.id.btnStop);
+        btnAdd = view.findViewById(R.id.btnAdd);
+        ivPlaylist = view.findViewById(R.id.ivPlaylist);
 
         loadFromSDCard();
-        myDBHelper = new MyDBHelper(this);
+        myDBHelper = new MyDBHelper(container.getContext());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, mp3List);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_single_choice, mp3List);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setAdapter(adapter);
         listView.setItemChecked(0, true);
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         selectedMP3 = mp3List.get(0);
         btnStop.setEnabled(false);
         btnStop.setTextColor(Color.DKGRAY);
-        mDAO = new MusicItemDAO(this);
+        mDAO = new MusicItemDAO(container.getContext());
 
         btnPlay.setOnClickListener(this);
         btnStop.setOnClickListener(this);
@@ -80,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ivPlaylist.setOnClickListener(this);
         listView.setOnItemClickListener(this);
 
+        return view;
     }
 
     private void loadFromSDCard() {
@@ -98,17 +106,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.ivPlaylist:
-                Intent intent = new Intent(MainActivity.this, MyPlaylistActivity.class);
-                startActivity(intent);
+//            case R.id.ivPlaylist:
+//                Intent intent = new Intent(SDCardFragment.this, MyPlaylistActivity.class);
+//                startActivity(intent);
             case R.id.btnAdd:
                 if(mDAO.isExist(selectedMP3) != null) {
                     mDAO.toastDisplay("이미 추가된 곡입니다");
                     Log.d("click", "exist");
                     break;
                 }
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                View dialogView = LayoutInflater.from(this).inflate(R.layout.add_song, null);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                View dialogView = LayoutInflater.from(context).inflate(R.layout.add_song, null);
                 dialog.setView(dialogView);
                 dialog.setTitle("Enter extra info");
 
@@ -125,10 +133,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(edtSinger.getText().toString().equals("") || edtAlbumArt.getText().toString().equals("")
                                 ||  edtGenre.getText().toString().equals("")) return;
 
-                        MusicItemDAO mDAO = new MusicItemDAO(MainActivity.this);
+                        MusicItemDAO mDAO = new MusicItemDAO(context);
                         mDAO.insert(selectedMP3, edtSinger.getText().toString().trim(),
                                 edtGenre.getText().toString().trim(), edtAlbumArt.getText().toString().trim());
-                        Toast.makeText(getApplicationContext(), selectedMP3 + "을 추가하였습니다!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, selectedMP3 + "을 추가하였습니다!", Toast.LENGTH_SHORT).show();
                         Log.d("onclick", selectedMP3);
                     }
                 });
@@ -162,8 +170,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-
 
     public String trimFileName() {
         String extractedName;

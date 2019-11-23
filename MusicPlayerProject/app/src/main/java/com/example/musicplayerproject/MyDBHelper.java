@@ -7,17 +7,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class MyDBHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 0;
+    private static final int VERSION = 1;
     private static final String DB_NAME = "musicDB";
 
-    public MyDBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DB_NAME, factory, VERSION);
+    public MyDBHelper(@Nullable Context context) {
+        super(context, DB_NAME, null, VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String str = "CREATE TABLE musicTBL (" +
-                "songNo Integer PRIMARY KEY, title CHAR(20), singer CHAR(20), genre CHAR(20), countClicked Integer, image Integer);";
+                "title CHAR(60) PRIMARY KEY, singer CHAR(20), genre CHAR(20), countClicked Integer, albumArt CHAR(20));";
         db.execSQL(str);
     }
 

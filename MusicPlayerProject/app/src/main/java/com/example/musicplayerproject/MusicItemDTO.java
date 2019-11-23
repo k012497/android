@@ -1,23 +1,18 @@
 package com.example.musicplayerproject;
 
 public class MusicItemDTO {
-    private int songNo;
     private String title;
     private String singer;
     private String genre;
     private int countClicked;
-    private int imageSource;
+    private String albumArt;
 
-    public MusicItemDTO(int songNo, String title, String singer, String genre, int countClicked, int imageSource) {
+    public MusicItemDTO(String title, String singer, String genre, int countClicked, String albumArt) {
         this.title = title;
         this.singer = singer;
         this.genre = genre;
         this.countClicked = countClicked;
-        this.imageSource = imageSource;
-    }
-
-    public int getSongNo() {
-        return songNo;
+        this.albumArt = albumArt;
     }
 
     public String getTitle() {
@@ -36,7 +31,7 @@ public class MusicItemDTO {
         return countClicked;
     }
 
-    public int getImageSource() {
-        return imageSource;
+    public String getAlbumArt() {
+        return albumArt;
     }
 }

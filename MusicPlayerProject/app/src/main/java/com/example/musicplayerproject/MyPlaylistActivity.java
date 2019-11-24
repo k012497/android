@@ -39,34 +39,30 @@ import static com.example.musicplayerproject.MusicItemDAO.items;
 public class MyPlaylistActivity extends Fragment {
     private View view;
     private Context context;
+
     private RecyclerView recyclerView;
-    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle;
-    private LinearLayout linearLayout;
-    private ImageView imageView;
-    private LinearLayout llButton;
-
     private ConstraintLayout music_playing;
-
-    private ImageView ivAlbum;
-    private TextView tvTitlePlaying, tvSingerPlaying;
-    private ImageButton ibtPlay, ibtPause, ibtStop, ibtPlayOrPause, ibtPrev, ibtNext;
+    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle, tvTitlePlaying, tvSingerPlaying;
+    private LinearLayout linearLayout;
+    private ImageView imageView, ivAlbum;
+    private LinearLayout llButton;
+    private ImageButton ibtPlay, ibtPause, ibtStop;
     private SeekBar seekBar;
-    boolean paused = false;
 
     private SlidingDrawer slidingDrawer;
     private SlidingDrawer.OnDrawerCloseListener drawerClosed;
     private SlidingDrawer.OnDrawerOpenListener drawerOpened;
 
+    private boolean paused = false;
+    private int menuItemId = 1;
+
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerViewAdapter adapter;
 
-    private String extractedName;
-
-    String selectedTitle;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
+    private String extractedName, selectedTitle;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
 
-    Thread thread;
 
     public static MyPlaylistActivity newInstance(){
         MyPlaylistActivity fragment2 = new MyPlaylistActivity();
@@ -90,9 +86,9 @@ public class MyPlaylistActivity extends Fragment {
         ibtPlay = view.findViewById(R.id.ibtPlay);
         ibtStop = view.findViewById(R.id.ibtStop);
         ibtPause = view.findViewById(R.id.ibtPause);
-        ibtPrev = view.findViewById(R.id.ibtPrev);
-        ibtNext = view.findViewById(R.id.ibtNext);
-        ibtPlayOrPause = view.findViewById(R.id.ibtPlayOrPause);
+//        ibtPrev = view.findViewById(R.id.ibtPrev);
+//        ibtNext = view.findViewById(R.id.ibtNext);
+//        ibtPlayOrPause = view.findViewById(R.id.ibtPlayOrPause);
         ivAlbum = view.findViewById(R.id.ivAlbum);
 
         // set Adapter for RecyclerView
@@ -184,9 +180,9 @@ public class MyPlaylistActivity extends Fragment {
     }
 
     public String trimFileName(String title) {
-        // .확장자명 잘라내기
-        int idx = title.indexOf(".");
+        // 확장자명 잘라내기
         // . 앞부분을 추출
+        int idx = title.indexOf(".");
         extractedName = title.substring(0, idx);
 
         // _를 공백으로 바꿈
@@ -208,6 +204,8 @@ public class MyPlaylistActivity extends Fragment {
     }
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<CustomViewHolder> implements View.OnClickListener {
+        private int position;
+
         @NonNull
         @Override
         public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -219,6 +217,7 @@ public class MyPlaylistActivity extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
+            this.position = position;
             final MusicItemDTO music = items.get(position);
             final String musicTitle = trimFileName(music.getTitle());
             tvTitle.setText(musicTitle);
@@ -233,8 +232,6 @@ public class MyPlaylistActivity extends Fragment {
             if(tvSingerPlaying.equals("-")){
                 buttonSetEnabled(true, false, false);
             }
-
-            ibtPlay.callOnClick();
 
             switch (music.getAlbumArt()){
                 case "hyukoh":
@@ -264,8 +261,8 @@ public class MyPlaylistActivity extends Fragment {
                 @Override
                 public void onClick(View v) {
                     slidingDrawer.open();
-                    if(selectedTitle == music.getTitle()){
-                        slidingDrawer.open();
+                    if(tvTitlePlaying.getText().toString().trim().equals(trimFileName(music.getTitle()).trim())){
+                        // 이미 재생중인 노래를 선택한 경우
                         return;
                     }
                     // 클릭 수 증가
@@ -274,11 +271,7 @@ public class MyPlaylistActivity extends Fragment {
                     int newCount = mvo.getCountClicked() + 1;
                     mDAO.updateCount(music.getTitle(), newCount);
                     tvCountClicked.setText(String.valueOf(newCount));
-//                    if(menuitem == null){
-//                        loadMyListData(1);
-//                    }else{
-//                        loadMyListData(menuitem.getItemId());
-//                    }
+                    loadMyListData(menuItemId);
 
                     tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
 
@@ -287,17 +280,30 @@ public class MyPlaylistActivity extends Fragment {
                         mediaPlayer.stop();
                     }
 
-                    slidingDrawer.open();
+                    selectedTitle = music.getTitle();
                     tvTitlePlaying.setText(musicTitle);
                     tvSingerPlaying.setText(music.getSinger());
                     tvTitlePlaying.setSelected(true);
-                    selectedTitle = music.getTitle();
+
+                    // SeekBar를 움직이면 해당구간이 재생됨
+                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            if (fromUser)
+                                mediaPlayer.seekTo(progress);
+                        }
+
+                        @Override public void onStartTrackingTouch(SeekBar seekBar) {
+                        }
+                        @Override public void onStopTrackingTouch(SeekBar seekBar) {
+                        }
+                    });
 
                     ibtPlay.callOnClick();
                 }
             });
 
-            // 리사이클러뷰 아이템 롱클릭 시
+            // 리사이클러뷰 아이템 롱클릭 시 - 삭제
             linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -333,6 +339,34 @@ public class MyPlaylistActivity extends Fragment {
                 case R.id.ibtPlay:
                     if(selectedTitle == null) break;
                     mediaPlayer = new MediaPlayer();
+
+                    // 끝까지 재생되었을 경우 다음곡 자동 재생
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+                        public void onCompletion(MediaPlayer mp) {
+                            MusicItemDAO mDAO = new MusicItemDAO(context);
+                            MusicItemDTO music = position < items.size() ? items.get(position + 1) : items.get(0);
+                            selectedTitle = music.getTitle();
+                            String musicTitle = trimFileName(music.getTitle());
+
+                            // 재생중인 화면 타이틀, 가수 바꾸기
+                            // 카운트 증가
+                            int newCount = music.getCountClicked() + 1;
+                            mDAO.updateCount(music.getTitle(), newCount);
+                            tvCountClicked.setText(String.valueOf(newCount));
+                            loadMyListData(menuItemId);
+
+                            tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
+
+                            selectedTitle = music.getTitle();
+                            tvTitlePlaying.setText(musicTitle);
+                            tvSingerPlaying.setText(music.getSinger());
+                            tvTitlePlaying.setSelected(true);
+
+                            ibtPlay.callOnClick();
+                        }
+                    });
+
                     try {
                         mediaPlayer.setDataSource(MP3_PATH + selectedTitle);
                         mediaPlayer.prepare();
@@ -392,13 +426,14 @@ public class MyPlaylistActivity extends Fragment {
     }
 
     public void startUiThread(){
-        thread = new Thread(){
+        Thread thread = new Thread(){
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run() {
                 if(mediaPlayer == null){
                     return;
                 }
+
                 // 작업스레드 내에서 UI객체를 변경하기 위해
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

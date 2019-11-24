@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="genre">
+        <item>락</item>
+        <item>발라드</item>
+        <item>댄스</item>
+        <item>RnB</item>
+        <item>힙합</item>
+    </string-array>
+
+    <string-array name="album">
+        <item>20</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>Panda Bear</item>
+
+    </string-array>
+
+</resources>

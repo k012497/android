@@ -52,28 +52,6 @@
                 />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/llButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#6D80CA"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <ImageButton
-                android:id="@+id/ibtPrev"
-                style="@style/image_button"
-                android:src="@drawable/rewind"/>
-            <ImageButton
-                android:id="@+id/ibtPlayOrPause"
-                style="@style/image_button"
-                android:src="@drawable/play"/>
-            <ImageButton
-                android:id="@+id/ibtNext"
-                style="@style/image_button"
-                android:src="@drawable/forward"/>
-        </LinearLayout>
-
         <include android:id="@+id/music_playing" layout="@layout/music_playing"/>
 
     </SlidingDrawer>

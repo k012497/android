@@ -28,29 +28,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SINGER : "/>
-        <EditText
-            android:id="@+id/edtSinger"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="enter singer name"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="GENRE : "/>
-        <EditText
-            android:id="@+id/edtGenre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="enter genre"/>
+        <Spinner
+            android:id="@+id/spinner_genre"
+            android:entries="@array/genre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -61,14 +44,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ALBUMART NAME : "/>
-        <EditText
-            android:id="@+id/edtAlbumArt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="enter albumart"/>
+            android:text="ALBUM : "/>
+        <Spinner
+            android:id="@+id/spinner_album"
+            android:entries="@array/album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
+
+
 
 
 </LinearLayout>

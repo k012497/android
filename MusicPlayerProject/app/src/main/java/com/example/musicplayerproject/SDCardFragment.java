@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
 
     private Button btnPlay, btnStop, btnAdd;
     private TextView tvSelectedSong;
-    EditText edtSinger, edtGenre, edtAlbumArt;
+    Spinner spinner_genre, spinner_album;
     private ListView listView;
     private MediaPlayer mediaPlayer;
 
@@ -114,23 +115,26 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
                 dialog.setView(dialogView);
                 dialog.setTitle("Enter extra info");
 
-                edtSinger = dialogView.findViewById(R.id.edtSinger);
-                edtGenre = dialogView.findViewById(R.id.edtGenre);
-                edtAlbumArt = dialogView.findViewById(R.id.edtAlbumArt);
+                spinner_genre = dialogView.findViewById(R.id.spinner_genre);
+                spinner_album = dialogView.findViewById(R.id.spinner_album);
                 tvSelectedSong = dialogView.findViewById(R.id.tvSelectedSong);
 
                 tvSelectedSong.setText(trimFileName());
 
+
                 dialog.setPositiveButton("ADD TO MY LIST", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(edtSinger.getText().toString().equals("") || edtAlbumArt.getText().toString().equals("")
-                                ||  edtGenre.getText().toString().equals("")) return;
+                        if(spinner_genre.getSelectedItem().toString().equals("")
+                                ||  spinner_album.getSelectedItem().toString().equals("")) {
+                            mDAO.toastDisplay("장르와 앨범을 선택해주세요");
+                            return;
+                        }
 
                         MusicItemDAO mDAO = new MusicItemDAO(context);
-                        mDAO.insert(selectedMP3, edtSinger.getText().toString().trim(),
-                                edtGenre.getText().toString().trim(), edtAlbumArt.getText().toString().trim());
-                        Toast.makeText(context, selectedMP3 + "을 추가하였습니다!", Toast.LENGTH_SHORT).show();
+                        mDAO.insert(selectedMP3, "혁오",
+                                spinner_genre.getSelectedItem().toString(), spinner_album.getSelectedItem().toString());
+                        mDAO.toastDisplay(selectedMP3 + "을 추가하였습니다!");
                         Log.d("onclick", selectedMP3);
                     }
                 });

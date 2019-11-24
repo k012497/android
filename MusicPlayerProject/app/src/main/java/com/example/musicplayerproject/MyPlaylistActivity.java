@@ -45,8 +45,8 @@ public class MyPlaylistActivity extends Fragment {
     private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle, tvTitlePlaying, tvSingerPlaying;
     private LinearLayout linearLayout;
     private ImageView imageView, ivAlbum;
-    private LinearLayout llButton;
-    private ImageButton ibtPlay, ibtPause, ibtStop;
+    private ImageView ivToneArm;
+    private ImageButton ibtPlay, ibtPause, ibtStop, ibtPrev, ibtNext;
     private SeekBar seekBar;
 
     private SlidingDrawer slidingDrawer;
@@ -77,7 +77,7 @@ public class MyPlaylistActivity extends Fragment {
 
         music_playing = view.findViewById(R.id.music_playing);
         recyclerView = view.findViewById(R.id.recyclerView);
-        llButton = view.findViewById(R.id.llButton);
+        ivToneArm = view.findViewById(R.id.ivToneArm);
         slidingDrawer = view.findViewById(R.id.slidingDrawer);
         tvNowTitle = view.findViewById(R.id.tvNowTitle);
         tvTitlePlaying = view.findViewById(R.id.tvTitlePlaying);
@@ -86,8 +86,8 @@ public class MyPlaylistActivity extends Fragment {
         ibtPlay = view.findViewById(R.id.ibtPlay);
         ibtStop = view.findViewById(R.id.ibtStop);
         ibtPause = view.findViewById(R.id.ibtPause);
-//        ibtPrev = view.findViewById(R.id.ibtPrev);
-//        ibtNext = view.findViewById(R.id.ibtNext);
+        ibtPrev = view.findViewById(R.id.ibtPrev);
+        ibtNext = view.findViewById(R.id.ibtNext);
 //        ibtPlayOrPause = view.findViewById(R.id.ibtPlayOrPause);
         ivAlbum = view.findViewById(R.id.ivAlbum);
 
@@ -140,7 +140,6 @@ public class MyPlaylistActivity extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             @Override
             public void onDrawerClosed() {
-                llButton.setVisibility(View.VISIBLE);
                 tvNowTitle.setVisibility(View.VISIBLE);
             }
         };
@@ -148,7 +147,6 @@ public class MyPlaylistActivity extends Fragment {
         drawerOpened= new SlidingDrawer.OnDrawerOpenListener() {
             @Override
             public void onDrawerOpened() {
-                llButton.setVisibility(View.INVISIBLE);
                 tvNowTitle.setVisibility(View.INVISIBLE);
                 music_playing.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -204,8 +202,6 @@ public class MyPlaylistActivity extends Fragment {
     }
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<CustomViewHolder> implements View.OnClickListener {
-        private int position;
-
         @NonNull
         @Override
         public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -217,7 +213,6 @@ public class MyPlaylistActivity extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
-            this.position = position;
             final MusicItemDTO music = items.get(position);
             final String musicTitle = trimFileName(music.getTitle());
             tvTitle.setText(musicTitle);
@@ -228,22 +223,28 @@ public class MyPlaylistActivity extends Fragment {
             ibtPlay.setOnClickListener(this);
             ibtPause.setOnClickListener(this);
             ibtStop.setOnClickListener(this);
+            ibtPrev.setOnClickListener(this);
+            ibtNext.setOnClickListener(this);
 
             if(tvSingerPlaying.equals("-")){
                 buttonSetEnabled(true, false, false);
             }
 
             switch (music.getAlbumArt()){
-                case "hyukoh":
-                    imageView.setImageResource(R.drawable.hyukoh);
+                case "Panda Bear":
+                    imageView.setImageResource(R.drawable.panda_bear);
                     break;
 
-                case "panda":
-                    imageView.setImageResource(R.drawable.panda_bear);
+                case "20":
+                    imageView.setImageResource(R.drawable.twenty);
                     break;
 
                 case "22":
                     imageView.setImageResource(R.drawable.twenty_two);
+                    break;
+
+                case "23":
+                    imageView.setImageResource(R.drawable.twenty_three);
                     break;
 
                 case "24":
@@ -280,10 +281,11 @@ public class MyPlaylistActivity extends Fragment {
                         mediaPlayer.stop();
                     }
 
+                    // 제목, 가수 설정
                     selectedTitle = music.getTitle();
                     tvTitlePlaying.setText(musicTitle);
                     tvSingerPlaying.setText(music.getSinger());
-                    tvTitlePlaying.setSelected(true);
+                    setMarquee(true);
 
                     // SeekBar를 움직이면 해당구간이 재생됨
                     seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -318,7 +320,7 @@ public class MyPlaylistActivity extends Fragment {
                             MusicItemDAO mDAO = new MusicItemDAO(context);
                             mDAO.delete(music.getTitle());
                             items.remove(position);
-                            adapter.notifyItemRemoved(position);
+                            loadMyListData(menuItemId);
                         }
                     });
                     dialog.setPositiveButton("cancel", null);
@@ -333,24 +335,68 @@ public class MyPlaylistActivity extends Fragment {
             return items != null ? items.size() : 0;
         }
 
+
+        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
         @Override
         public void onClick(View v) {
+
             switch (v.getId()){
+
+                case R.id.ibtPrev:
+                    mediaPlayer.pause();
+
+                    int currentIndex = getCurrentIndex();
+                    MusicItemDTO music = currentIndex == 0 ? items.get(items.size() - 1) : items.get(currentIndex - 1);
+                    selectedTitle = music.getTitle();
+
+                    String musicTitle = trimFileName(music.getTitle());
+
+                    // 재생중인 화면 타이틀, 가수 바꾸기
+                    // 카운트 증가
+                    MusicItemDAO mDAO = new MusicItemDAO(context);
+                    int newCount = music.getCountClicked() + 1;
+                    mDAO.updateCount(music.getTitle(), newCount);
+                    tvCountClicked.setText(String.valueOf(newCount));
+                    loadMyListData(menuItemId);
+
+                    tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
+
+                    selectedTitle = music.getTitle();
+                    tvTitlePlaying.setText(musicTitle);
+                    tvSingerPlaying.setText(music.getSinger());
+                    ivToneArm.setRotation(90);
+                    setMarquee(true);
+
+                    ibtPlay.callOnClick();
+
+                    break;
+
+                case R.id.ibtNext:
+                    if(!mediaPlayer.isPlaying()){
+                        ibtPlay.callOnClick();
+                    }
+                    mediaPlayer.seekTo(seekBar.getMax());
+                    break;
+
                 case R.id.ibtPlay:
                     if(selectedTitle == null) break;
                     mediaPlayer = new MediaPlayer();
+                    setMarquee(true);
 
                     // 끝까지 재생되었을 경우 다음곡 자동 재생
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
                         public void onCompletion(MediaPlayer mp) {
-                            MusicItemDAO mDAO = new MusicItemDAO(context);
-                            MusicItemDTO music = position < items.size() ? items.get(position + 1) : items.get(0);
+
+                            int currentIndex = getCurrentIndex();
+                            MusicItemDTO music = currentIndex < items.size() - 1 ? items.get(currentIndex + 1) : items.get(0);
+                            Log.d("auto play", currentIndex + music.getTitle());
                             selectedTitle = music.getTitle();
                             String musicTitle = trimFileName(music.getTitle());
 
                             // 재생중인 화면 타이틀, 가수 바꾸기
                             // 카운트 증가
+                            MusicItemDAO mDAO = new MusicItemDAO(context);
                             int newCount = music.getCountClicked() + 1;
                             mDAO.updateCount(music.getTitle(), newCount);
                             tvCountClicked.setText(String.valueOf(newCount));
@@ -361,7 +407,8 @@ public class MyPlaylistActivity extends Fragment {
                             selectedTitle = music.getTitle();
                             tvTitlePlaying.setText(musicTitle);
                             tvSingerPlaying.setText(music.getSinger());
-                            tvTitlePlaying.setSelected(true);
+                            ivToneArm.setRotation(90);
+                            setMarquee(true);
 
                             ibtPlay.callOnClick();
                         }
@@ -374,6 +421,7 @@ public class MyPlaylistActivity extends Fragment {
 
                         buttonSetEnabled(false, true, true);
                         startUiThread();
+                        ivToneArm.setRotation(90);
 
                     } catch (IOException e) {
                         Log.e("btnPlay onClick", e.toString());
@@ -384,18 +432,20 @@ public class MyPlaylistActivity extends Fragment {
                     if(paused){
                         // 일시정지중일 때
                         mediaPlayer.start();
-                        tvNowTitle.setSelected(true);
+                        setMarquee(true);
                         startUiThread();
                         paused = false;
                         ibtPause.setImageResource(R.drawable.pause);
+                        ivToneArm.setRotation(90);
 
                     } else {
                         // 일시정지중이 아닐 때
                         mediaPlayer.pause();
-                        tvNowTitle.setSelected(false);
+                        setMarquee(false);
                         Toast.makeText(context, "paused", Toast.LENGTH_SHORT).show();
                         paused = true;
                         ibtPause.setImageResource(R.drawable.pause_click);
+                        ivToneArm.setRotation(30);
                     }
                     buttonSetEnabled(false, true, true);
                     break;
@@ -410,6 +460,50 @@ public class MyPlaylistActivity extends Fragment {
                     break;
             }
         }
+
+        private void setMarquee(boolean marquee){
+            tvTitlePlaying.setSelected(marquee);
+            tvNowTitle.setSelected(marquee);
+        }
+
+//        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+//        private void continueToPlay(){
+//            MusicItemDAO mDAO = new MusicItemDAO(context);
+//            MusicItemDTO music = position < items.size() ? items.get(position + 1) : items.get(0);
+//            selectedTitle = music.getTitle();
+//            String musicTitle = trimFileName(music.getTitle());
+//
+//            // 재생중인 화면 타이틀, 가수 바꾸기
+//            // 카운트 증가
+//            int newCount = music.getCountClicked() + 1;
+//            mDAO.updateCount(music.getTitle(), newCount);
+//            tvCountClicked.setText(String.valueOf(newCount));
+//            loadMyListData(menuItemId);
+//
+//            tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
+//
+//            selectedTitle = music.getTitle();
+//            tvTitlePlaying.setText(musicTitle);
+//            tvSingerPlaying.setText(music.getSinger());
+//            ivToneArm.setRotation(90);
+//            setMarquee(true);
+//
+//            ibtPlay.callOnClick();
+//        }
+    }
+
+    private int getCurrentIndex() {
+        // items 중 현재 재생중인 곡의 인덱스 가져오기
+        int count = 0;
+        int currentIndex = 0;
+        for(MusicItemDTO music : items){
+            if(music.getTitle().equals(selectedTitle)){
+                currentIndex = count;
+                break;
+            }
+            count++;
+        }
+        return currentIndex;
     }
 
     private class CustomViewHolder extends RecyclerView.ViewHolder{

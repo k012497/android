@@ -1,9 +1,7 @@
 package com.example.musicplayerproject;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,17 +13,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
@@ -36,16 +30,15 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
     Context context;
     View view;
 
-    private Button btnPlay, btnStop, btnAdd;
     private TextView tvSelectedSong;
-    Spinner spinner_genre, spinner_album;
+    private Spinner spinner_genre, spinner_album;
     private ListView listView;
-    private MediaPlayer mediaPlayer;
+    static Button btnPlay, btnStop, btnAdd;
+    static MediaPlayer mediaPlayer;
 
     private String selectedMP3;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
     private ArrayList<String> mp3List = new ArrayList<String>();
-//    static ArrayList<MusicItemDTO> items = new ArrayList<MusicItemDTO>();
 
     private MusicItemDAO mDAO;
     private MyDBHelper myDBHelper;
@@ -88,6 +81,8 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
         return view;
     }
 
+
+
     private void loadFromSDCard() {
         // SDcard의 파일을 읽어서 리스트뷰에 출력
         mp3List = new ArrayList<String>();
@@ -96,7 +91,7 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
         for(File file : listFiles){
             fileName = file.getName(); // 파일명 또는 디렉토리명
             extendName = fileName.substring(fileName.length() - 3); // 확장자명 가져오기 (마지막 3글자 가져오기)
-            // 확장명이 mp3인 경우만 추가
+            // 확장명이 mp3 또는 mp4인 경우만 추가
             if(extendName.equals("mp3") || extendName.equals("mp4")) mp3List.add(fileName);
         }
     }
@@ -107,7 +102,6 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
             case R.id.btnAdd:
                 if(mDAO.isExist(selectedMP3) != null) {
                     mDAO.toastDisplay("이미 추가된 곡입니다");
-                    Log.d("click", "exist");
                     break;
                 }
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -135,7 +129,6 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
                         mDAO.insert(selectedMP3, "혁오",
                                 spinner_genre.getSelectedItem().toString(), spinner_album.getSelectedItem().toString());
                         mDAO.toastDisplay(selectedMP3 + "을 추가하였습니다!");
-                        Log.d("onclick", selectedMP3);
                     }
                 });
 
@@ -183,7 +176,6 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
         {
             extractedName += (tempName[i] + " ");
         }
-        Log.d("trimFileName", selectedMP3);
 
         return extractedName;
     }
@@ -191,6 +183,5 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selectedMP3 = mp3List.get(position);
-        Log.d("onItemClick", selectedMP3);
     }
 }

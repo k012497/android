@@ -28,7 +28,7 @@
         android:id="@+id/btnStop"
         android:layout_width="0dp"
         style="@style/button_style"
-        android:text="Pause"
+        android:text="Stop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnPlay"
         app:layout_constraintBottom_toTopOf="@id/btnAdd"/>

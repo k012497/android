@@ -11,13 +11,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
-        Log.d("Main", "make Adapter");
     }
 
     // 프래그먼트 교체를 보여주는 역할
-    @Override
     public Fragment getItem(int position) {
-        Log.d("Main", "getItem");
         switch (position){
             case 0: return SDCardFragment.newInstance();
             case 1: return MyPlaylistActivity.newInstance();
@@ -27,7 +24,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        Log.d("Main", "getCount");
         return 2;
     }
 
@@ -42,4 +38,5 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             default: return null;
         }
     }
+
 }

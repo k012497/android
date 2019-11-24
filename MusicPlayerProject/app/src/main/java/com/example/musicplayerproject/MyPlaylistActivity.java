@@ -130,7 +130,6 @@ public class MyPlaylistActivity extends Fragment {
         return true;
     }
 
-
     private void setDrawerOpendAndClosed() {
         drawerClosed = new SlidingDrawer.OnDrawerCloseListener() {
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
@@ -171,7 +170,7 @@ public class MyPlaylistActivity extends Fragment {
                 items = mDAO.selectAllByCount();
                 break;
         }
-//        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     // trim fileName (remove extend name & under-bar)
@@ -188,7 +187,6 @@ public class MyPlaylistActivity extends Fragment {
         {
             extractedName += (tempName[i] + " ");
         }
-        Log.d("trimFileName", title);
 
         return extractedName;
     }

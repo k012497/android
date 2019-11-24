@@ -46,7 +46,7 @@ public class MyPlaylistActivity extends Fragment {
     private LinearLayout linearLayout;
     private ImageView imageView, ivAlbum;
     private ImageView ivToneArm;
-    private ImageButton ibtPause, ibtStop, ibtPrev, ibtNext;
+    private ImageButton ibtPauseAndPlay, ibtPrev, ibtNext;
     private SeekBar seekBar;
 
     private SlidingDrawer slidingDrawer;
@@ -62,7 +62,6 @@ public class MyPlaylistActivity extends Fragment {
     private MediaPlayer mediaPlayer;
     private String extractedName, selectedTitle;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
-
 
     public static MyPlaylistActivity newInstance(){
         MyPlaylistActivity fragment2 = new MyPlaylistActivity();
@@ -83,8 +82,7 @@ public class MyPlaylistActivity extends Fragment {
         tvTitlePlaying = view.findViewById(R.id.tvTitlePlaying);
         tvSingerPlaying = view.findViewById(R.id.tvSingerPlaying);
         seekBar = view.findViewById(R.id.seekBar);
-        ibtStop = view.findViewById(R.id.ibtStop);
-        ibtPause = view.findViewById(R.id.ibtPause);
+        ibtPauseAndPlay = view.findViewById(R.id.ibtPause);
         ibtPrev = view.findViewById(R.id.ibtPrev);
         ibtNext = view.findViewById(R.id.ibtNext);
         ivAlbum = view.findViewById(R.id.ivAlbum);
@@ -95,8 +93,8 @@ public class MyPlaylistActivity extends Fragment {
         adapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
 
+        // set menu & items
         setHasOptionsMenu(true);
-
         loadMyListData(1);
 
         // set drawer
@@ -156,6 +154,7 @@ public class MyPlaylistActivity extends Fragment {
         };
     }
 
+    // set items(ArrayList<MusicItemDTO>) by different SELECT query
     private void loadMyListData(int menu) {
         MusicItemDAO mDAO = new MusicItemDAO(context);
         switch (menu){
@@ -175,6 +174,7 @@ public class MyPlaylistActivity extends Fragment {
 //        adapter.notifyDataSetChanged();
     }
 
+    // trim fileName (remove extend name & under-bar)
     public String trimFileName(String title) {
         // 확장자명 잘라내기
         // . 앞부분을 추출
@@ -191,11 +191,6 @@ public class MyPlaylistActivity extends Fragment {
         Log.d("trimFileName", title);
 
         return extractedName;
-    }
-
-    public void buttonSetEnabled(boolean play, boolean pause, boolean stop){
-        ibtPause.setEnabled(pause);
-        ibtStop.setEnabled(stop);
     }
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<CustomViewHolder> implements View.OnClickListener {
@@ -217,15 +212,18 @@ public class MyPlaylistActivity extends Fragment {
             tvGenre.setText(music.getGenre());
             tvCountClicked.setText(String.valueOf(music.getCountClicked()));
 
-            ibtPause.setOnClickListener(this);
-            ibtStop.setOnClickListener(this);
+            ibtPauseAndPlay.setOnClickListener(this);
             ibtPrev.setOnClickListener(this);
             ibtNext.setOnClickListener(this);
 
+            // if nothing is chosen, set buttons disabled
             if(tvSingerPlaying.equals("-")){
-                buttonSetEnabled(true, false, false);
+                ibtNext.setEnabled(false);
+                ibtPrev.setEnabled(false);
+                ibtPauseAndPlay.setEnabled(false);
             }
 
+            // select album art
             switch (music.getAlbumArt()){
                 case "Panda Bear":
                     imageView.setImageResource(R.drawable.panda_bear);
@@ -252,17 +250,17 @@ public class MyPlaylistActivity extends Fragment {
                     break;
             }
 
-            // 리사이클러뷰 아이템 클릭 시
+            // when click the item in recyclerView
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
                 @Override
                 public void onClick(View v) {
                     slidingDrawer.open();
+                    // when click the same song now playing
                     if(tvTitlePlaying.getText().toString().trim().equals(trimFileName(music.getTitle()).trim())){
-                        // 이미 재생중인 노래를 선택한 경우
                         return;
                     }
-                    // 클릭 수 증가
+                    // increase the count clicked and update
                     MusicItemDAO mDAO = new MusicItemDAO(context);
                     MusicItemDTO mvo = mDAO.isExist(music.getTitle());
                     int newCount = mvo.getCountClicked() + 1;
@@ -272,18 +270,18 @@ public class MyPlaylistActivity extends Fragment {
 
                     tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
 
-                    // 재생중인 노래가 있으면 멈추기
+                    // stop mediaPlayer if any song is playing
                     if (mediaPlayer != null && mediaPlayer.isPlaying()){
                         mediaPlayer.stop();
                     }
 
-                    // 제목, 가수 설정
+                    // set title, singer, marquee
                     selectedTitle = music.getTitle();
                     tvTitlePlaying.setText(musicTitle);
                     tvSingerPlaying.setText(music.getSinger());
                     setMarquee(true);
 
-                    // SeekBar를 움직이면 해당구간이 재생됨
+                    // set mediaPlayer to seek the progress of seekBar
                     seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -297,21 +295,18 @@ public class MyPlaylistActivity extends Fragment {
                         }
                     });
 
-//                    ibtPlay.callOnClick();
                     firstPlay = true;
-                    ibtPause.callOnClick();
+                    ibtPauseAndPlay.callOnClick();
                 }
             });
 
-            // 리사이클러뷰 아이템 롱클릭 시 - 삭제
+            // delete the item, when long click the item in recyclerView
             linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                     dialog.setTitle("Delete music");
                     dialog.setMessage("Are you sure to delete " + music.getTitle() + "?");
-                    Log.d("longclick position", position+"");
-                    Log.d("longclick position", items.get(position).getTitle());
                     dialog.setNegativeButton("delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -340,40 +335,58 @@ public class MyPlaylistActivity extends Fragment {
 
             switch (v.getId()){
                 case R.id.ibtPrev:
-                    mediaPlayer.pause();
+                    // 2% 미만으로 들었을 경우 이전 곡으로
+                    // 2% 이상 들었을 경우 재생중인 곡의 처음으로
+                    if(seekBar.getProgress() < seekBar.getMax() * 0.02){
+                        mediaPlayer.pause();
 
-                    int currentIndex = getCurrentIndex();
-                    MusicItemDTO music = currentIndex == 0 ? items.get(items.size() - 1) : items.get(currentIndex - 1);
-                    selectedTitle = music.getTitle();
+                        int currentIndex = getCurrentIndex();
+                        MusicItemDTO music = currentIndex == 0 ? items.get(items.size() - 1) : items.get(currentIndex - 1);
+                        selectedTitle = music.getTitle();
 
 
-                    // 재생중인 화면 타이틀, 가수 바꾸기
-                    // 카운트 증가
-                    MusicItemDAO mDAO = new MusicItemDAO(context);
-                    int newCount = music.getCountClicked() + 1;
-                    mDAO.updateCount(music.getTitle(), newCount);
-                    tvCountClicked.setText(String.valueOf(newCount));
-                    loadMyListData(menuItemId);
+                        // 재생중인 화면 타이틀, 가수 바꾸기
+                        // 카운트 증가
+                        MusicItemDAO mDAO = new MusicItemDAO(context);
+                        int newCount = music.getCountClicked() + 1;
+                        mDAO.updateCount(music.getTitle(), newCount);
+                        tvCountClicked.setText(String.valueOf(newCount));
+                        loadMyListData(menuItemId);
 
-                    String musicTitle = trimFileName(music.getTitle());
-                    tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
-                    selectedTitle = music.getTitle();
-                    tvTitlePlaying.setText(musicTitle);
-                    tvSingerPlaying.setText(music.getSinger());
-                    ivToneArm.setRotation(90);
-                    setMarquee(true);
+                        String musicTitle = trimFileName(music.getTitle());
+                        tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
+                        selectedTitle = music.getTitle();
+                        tvTitlePlaying.setText(musicTitle);
+                        tvSingerPlaying.setText(music.getSinger());
+                        ivToneArm.setRotation(90);
+                        setMarquee(true);
 
-//                    ibtPlay.callOnClick();
+                        if(paused) {
+                            // if mediaPlayer is paused, change icon and flag
+                            // because previous song is gonna be played automatically
+                            paused = false;
+                            ibtPauseAndPlay.setImageResource(R.drawable.pause);
+                        }
+
+                    } else {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        seekBar.setProgress(0);
+                    }
+
                     firstPlay = true;
-                    ibtPause.callOnClick();
+                    ibtPauseAndPlay.callOnClick();
 
                     break;
 
                 case R.id.ibtNext:
-                    if(!mediaPlayer.isPlaying()){
-//                    ibtPlay.callOnClick();
+                    if(paused){
+                        // if mediaPlayer is paused, change icon and flag
+                        // because next song is gonna be played automatically
+                        paused = false;
+                        ibtPauseAndPlay.setImageResource(R.drawable.pause);
                         firstPlay = true;
-                        ibtPause.callOnClick();
+                        ibtPauseAndPlay.callOnClick();
                     }
                     mediaPlayer.seekTo(seekBar.getMax());
                     break;
@@ -384,7 +397,7 @@ public class MyPlaylistActivity extends Fragment {
                         mediaPlayer = new MediaPlayer();
                         setMarquee(true);
 
-                        // 끝까지 재생되었을 경우 다음곡 자동 재생
+                        // play next song when completion
                         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
                             public void onCompletion(MediaPlayer mp) {
@@ -395,8 +408,7 @@ public class MyPlaylistActivity extends Fragment {
                                 selectedTitle = music.getTitle();
                                 String musicTitle = trimFileName(music.getTitle());
 
-                                // 재생중인 화면 타이틀, 가수 바꾸기
-                                // 카운트 증가
+                                // set title, singer, count
                                 MusicItemDAO mDAO = new MusicItemDAO(context);
                                 int newCount = music.getCountClicked() + 1;
                                 mDAO.updateCount(music.getTitle(), newCount);
@@ -411,9 +423,9 @@ public class MyPlaylistActivity extends Fragment {
                                 ivToneArm.setRotation(90);
                                 setMarquee(true);
 
-//                                ibtPlay.callOnClick();
                                 firstPlay = true;
-                                ibtPause.callOnClick();
+                                paused = false;
+                                ibtPauseAndPlay.callOnClick();
                             }
                         });
 
@@ -422,7 +434,6 @@ public class MyPlaylistActivity extends Fragment {
                             mediaPlayer.prepare();
                             mediaPlayer.start();
 
-                            buttonSetEnabled(false, true, true);
                             startUiThread();
                             ivToneArm.setRotation(90);
 
@@ -440,7 +451,7 @@ public class MyPlaylistActivity extends Fragment {
                         setMarquee(true);
                         startUiThread();
                         paused = false;
-                        ibtPause.setImageResource(R.drawable.pause);
+                        ibtPauseAndPlay.setImageResource(R.drawable.pause);
                         ivToneArm.setRotation(90);
 
                     } else {
@@ -449,23 +460,11 @@ public class MyPlaylistActivity extends Fragment {
                         setMarquee(false);
                         Toast.makeText(context, "paused", Toast.LENGTH_SHORT).show();
                         paused = true;
-                        ibtPause.setImageResource(R.drawable.play);
+                        ibtPauseAndPlay.setImageResource(R.drawable.play);
                         ivToneArm.setRotation(30);
                     }
-                    buttonSetEnabled(false, true, true);
-                    break;
-
-                case R.id.ibtStop:
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
-                    seekBar.setProgress(0);
-                    ibtPause.setImageResource(R.drawable.pause);
-                    paused = false;
-                    buttonSetEnabled(true, false, false);
                     break;
             }
-
-
         }
 
         private void setMarquee(boolean marquee){

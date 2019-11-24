@@ -90,14 +90,6 @@
                 android:src="@drawable/rewind" />
 
             <ImageButton
-                android:id="@+id/ibtPlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="#00000000"
-                android:src="@drawable/play" />
-
-            <ImageButton
                 android:id="@+id/ibtPause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

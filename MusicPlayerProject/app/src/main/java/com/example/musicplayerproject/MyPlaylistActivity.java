@@ -46,14 +46,14 @@ public class MyPlaylistActivity extends Fragment {
     private LinearLayout linearLayout;
     private ImageView imageView, ivAlbum;
     private ImageView ivToneArm;
-    private ImageButton ibtPlay, ibtPause, ibtStop, ibtPrev, ibtNext;
+    private ImageButton ibtPause, ibtStop, ibtPrev, ibtNext;
     private SeekBar seekBar;
 
     private SlidingDrawer slidingDrawer;
     private SlidingDrawer.OnDrawerCloseListener drawerClosed;
     private SlidingDrawer.OnDrawerOpenListener drawerOpened;
 
-    private boolean paused = false;
+    private boolean paused = false, firstPlay = true;
     private int menuItemId = 1;
 
     private RecyclerView.LayoutManager layoutManager;
@@ -83,12 +83,10 @@ public class MyPlaylistActivity extends Fragment {
         tvTitlePlaying = view.findViewById(R.id.tvTitlePlaying);
         tvSingerPlaying = view.findViewById(R.id.tvSingerPlaying);
         seekBar = view.findViewById(R.id.seekBar);
-        ibtPlay = view.findViewById(R.id.ibtPlay);
         ibtStop = view.findViewById(R.id.ibtStop);
         ibtPause = view.findViewById(R.id.ibtPause);
         ibtPrev = view.findViewById(R.id.ibtPrev);
         ibtNext = view.findViewById(R.id.ibtNext);
-//        ibtPlayOrPause = view.findViewById(R.id.ibtPlayOrPause);
         ivAlbum = view.findViewById(R.id.ivAlbum);
 
         // set Adapter for RecyclerView
@@ -196,7 +194,6 @@ public class MyPlaylistActivity extends Fragment {
     }
 
     public void buttonSetEnabled(boolean play, boolean pause, boolean stop){
-        ibtPlay.setEnabled(play);
         ibtPause.setEnabled(pause);
         ibtStop.setEnabled(stop);
     }
@@ -220,7 +217,6 @@ public class MyPlaylistActivity extends Fragment {
             tvGenre.setText(music.getGenre());
             tvCountClicked.setText(String.valueOf(music.getCountClicked()));
 
-            ibtPlay.setOnClickListener(this);
             ibtPause.setOnClickListener(this);
             ibtStop.setOnClickListener(this);
             ibtPrev.setOnClickListener(this);
@@ -301,7 +297,9 @@ public class MyPlaylistActivity extends Fragment {
                         }
                     });
 
-                    ibtPlay.callOnClick();
+//                    ibtPlay.callOnClick();
+                    firstPlay = true;
+                    ibtPause.callOnClick();
                 }
             });
 
@@ -341,7 +339,6 @@ public class MyPlaylistActivity extends Fragment {
         public void onClick(View v) {
 
             switch (v.getId()){
-
                 case R.id.ibtPrev:
                     mediaPlayer.pause();
 
@@ -349,7 +346,6 @@ public class MyPlaylistActivity extends Fragment {
                     MusicItemDTO music = currentIndex == 0 ? items.get(items.size() - 1) : items.get(currentIndex - 1);
                     selectedTitle = music.getTitle();
 
-                    String musicTitle = trimFileName(music.getTitle());
 
                     // 재생중인 화면 타이틀, 가수 바꾸기
                     // 카운트 증가
@@ -359,76 +355,85 @@ public class MyPlaylistActivity extends Fragment {
                     tvCountClicked.setText(String.valueOf(newCount));
                     loadMyListData(menuItemId);
 
+                    String musicTitle = trimFileName(music.getTitle());
                     tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
-
                     selectedTitle = music.getTitle();
                     tvTitlePlaying.setText(musicTitle);
                     tvSingerPlaying.setText(music.getSinger());
                     ivToneArm.setRotation(90);
                     setMarquee(true);
 
-                    ibtPlay.callOnClick();
+//                    ibtPlay.callOnClick();
+                    firstPlay = true;
+                    ibtPause.callOnClick();
 
                     break;
 
                 case R.id.ibtNext:
                     if(!mediaPlayer.isPlaying()){
-                        ibtPlay.callOnClick();
+//                    ibtPlay.callOnClick();
+                        firstPlay = true;
+                        ibtPause.callOnClick();
                     }
                     mediaPlayer.seekTo(seekBar.getMax());
                     break;
 
-                case R.id.ibtPlay:
-                    if(selectedTitle == null) break;
-                    mediaPlayer = new MediaPlayer();
-                    setMarquee(true);
-
-                    // 끝까지 재생되었을 경우 다음곡 자동 재생
-                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-                        public void onCompletion(MediaPlayer mp) {
-
-                            int currentIndex = getCurrentIndex();
-                            MusicItemDTO music = currentIndex < items.size() - 1 ? items.get(currentIndex + 1) : items.get(0);
-                            Log.d("auto play", currentIndex + music.getTitle());
-                            selectedTitle = music.getTitle();
-                            String musicTitle = trimFileName(music.getTitle());
-
-                            // 재생중인 화면 타이틀, 가수 바꾸기
-                            // 카운트 증가
-                            MusicItemDAO mDAO = new MusicItemDAO(context);
-                            int newCount = music.getCountClicked() + 1;
-                            mDAO.updateCount(music.getTitle(), newCount);
-                            tvCountClicked.setText(String.valueOf(newCount));
-                            loadMyListData(menuItemId);
-
-                            tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
-
-                            selectedTitle = music.getTitle();
-                            tvTitlePlaying.setText(musicTitle);
-                            tvSingerPlaying.setText(music.getSinger());
-                            ivToneArm.setRotation(90);
-                            setMarquee(true);
-
-                            ibtPlay.callOnClick();
-                        }
-                    });
-
-                    try {
-                        mediaPlayer.setDataSource(MP3_PATH + selectedTitle);
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
-
-                        buttonSetEnabled(false, true, true);
-                        startUiThread();
-                        ivToneArm.setRotation(90);
-
-                    } catch (IOException e) {
-                        Log.e("btnPlay onClick", e.toString());
-                    }
-                    break;
-
                 case R.id.ibtPause:
+                    if(firstPlay){
+                        if(selectedTitle == null) break;
+                        mediaPlayer = new MediaPlayer();
+                        setMarquee(true);
+
+                        // 끝까지 재생되었을 경우 다음곡 자동 재생
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+                            public void onCompletion(MediaPlayer mp) {
+
+                                int currentIndex = getCurrentIndex();
+                                MusicItemDTO music = currentIndex < items.size() - 1 ? items.get(currentIndex + 1) : items.get(0);
+                                Log.d("auto play", currentIndex + music.getTitle());
+                                selectedTitle = music.getTitle();
+                                String musicTitle = trimFileName(music.getTitle());
+
+                                // 재생중인 화면 타이틀, 가수 바꾸기
+                                // 카운트 증가
+                                MusicItemDAO mDAO = new MusicItemDAO(context);
+                                int newCount = music.getCountClicked() + 1;
+                                mDAO.updateCount(music.getTitle(), newCount);
+                                tvCountClicked.setText(String.valueOf(newCount));
+                                loadMyListData(menuItemId);
+
+                                tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
+
+                                selectedTitle = music.getTitle();
+                                tvTitlePlaying.setText(musicTitle);
+                                tvSingerPlaying.setText(music.getSinger());
+                                ivToneArm.setRotation(90);
+                                setMarquee(true);
+
+//                                ibtPlay.callOnClick();
+                                firstPlay = true;
+                                ibtPause.callOnClick();
+                            }
+                        });
+
+                        try {
+                            mediaPlayer.setDataSource(MP3_PATH + selectedTitle);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+
+                            buttonSetEnabled(false, true, true);
+                            startUiThread();
+                            ivToneArm.setRotation(90);
+
+                        } catch (IOException e) {
+                            Log.e("btnPlay onClick", e.toString());
+                        }
+
+                        firstPlay = false;
+                        break;
+                    }
+
                     if(paused){
                         // 일시정지중일 때
                         mediaPlayer.start();
@@ -444,7 +449,7 @@ public class MyPlaylistActivity extends Fragment {
                         setMarquee(false);
                         Toast.makeText(context, "paused", Toast.LENGTH_SHORT).show();
                         paused = true;
-                        ibtPause.setImageResource(R.drawable.pause_click);
+                        ibtPause.setImageResource(R.drawable.play);
                         ivToneArm.setRotation(30);
                     }
                     buttonSetEnabled(false, true, true);
@@ -459,6 +464,8 @@ public class MyPlaylistActivity extends Fragment {
                     buttonSetEnabled(true, false, false);
                     break;
             }
+
+
         }
 
         private void setMarquee(boolean marquee){
@@ -466,30 +473,6 @@ public class MyPlaylistActivity extends Fragment {
             tvNowTitle.setSelected(marquee);
         }
 
-//        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-//        private void continueToPlay(){
-//            MusicItemDAO mDAO = new MusicItemDAO(context);
-//            MusicItemDTO music = position < items.size() ? items.get(position + 1) : items.get(0);
-//            selectedTitle = music.getTitle();
-//            String musicTitle = trimFileName(music.getTitle());
-//
-//            // 재생중인 화면 타이틀, 가수 바꾸기
-//            // 카운트 증가
-//            int newCount = music.getCountClicked() + 1;
-//            mDAO.updateCount(music.getTitle(), newCount);
-//            tvCountClicked.setText(String.valueOf(newCount));
-//            loadMyListData(menuItemId);
-//
-//            tvNowTitle.setText(music.getSinger() + " - " + musicTitle);
-//
-//            selectedTitle = music.getTitle();
-//            tvTitlePlaying.setText(musicTitle);
-//            tvSingerPlaying.setText(music.getSinger());
-//            ivToneArm.setRotation(90);
-//            setMarquee(true);
-//
-//            ibtPlay.callOnClick();
-//        }
     }
 
     private int getCurrentIndex() {

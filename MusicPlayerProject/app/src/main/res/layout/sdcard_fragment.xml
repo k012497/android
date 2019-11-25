@@ -8,6 +8,8 @@
 
     <ListView
         android:id="@+id/listView"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/btnPlay"
@@ -22,27 +24,25 @@
         android:text="Play"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnStop"
-        app:layout_constraintBottom_toTopOf="@id/btnAdd"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/btnStop"
         android:layout_width="0dp"
         style="@style/button_style"
         android:text="Stop"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnPlay"
-        app:layout_constraintBottom_toTopOf="@id/btnAdd"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/btnAdd"
         style="@style/button_style"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:gravity="center"
-        android:text="ADD TO MY PLAYLIST"
-        android:layout_marginTop="1dp"
+        android:text="ADD TO PLAYLIST"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/btnStop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

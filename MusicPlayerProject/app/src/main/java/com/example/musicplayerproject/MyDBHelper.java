@@ -14,10 +14,20 @@ public class MyDBHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, VERSION);
     }
 
+    private int id;
+    private String title;
+    private String artist;
+    private String genre;
+    private int countClicked;
+    private String albumArt;
+    private String dataPath;
+    private long duration;
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String str = "CREATE TABLE musicTBL (" +
                 "title CHAR(60) PRIMARY KEY, singer CHAR(20), genre CHAR(20), countClicked Integer, albumArt CHAR(20));";
+//                "id Integer PRIMARY KEY AUTOINCREMENT, title CHAR(60) PRIMARY KEY, singer CHAR(20), genre CHAR(20), countClicked Integer, albumArt CHAR(20));";
         db.execSQL(str);
     }
 

@@ -106,6 +106,8 @@ public class MyPlaylistActivity extends Fragment {
         slidingDrawer.setOnDrawerOpenListener(drawerOpened);
         slidingDrawer.setOnDrawerCloseListener(drawerClosed);
 
+        // if nothing is selected, set buttons disabled
+        setButtonEnabled(false, false, false);
 
         return view;
     }
@@ -157,6 +159,12 @@ public class MyPlaylistActivity extends Fragment {
         };
     }
 
+    public void setButtonEnabled(boolean prev, boolean play, boolean next){
+        ibtNext.setEnabled(prev);
+        ibtPauseAndPlay.setEnabled(play);
+        ibtPrev.setEnabled(next);
+    }
+
     // set items(ArrayList<MusicItemDTO>) by different SELECT query
     private void loadMyListData(int menu) {
         MusicItemDAO mDAO = new MusicItemDAO(context);
@@ -204,7 +212,7 @@ public class MyPlaylistActivity extends Fragment {
             return customViewHolder;
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
             final MusicItemDTO music = items.get(position);
@@ -217,13 +225,6 @@ public class MyPlaylistActivity extends Fragment {
             ibtPauseAndPlay.setOnClickListener(this);
             ibtPrev.setOnClickListener(this);
             ibtNext.setOnClickListener(this);
-
-            // if nothing is chosen, set buttons disabled
-            if(tvSingerPlaying.equals("-")){
-                ibtNext.setEnabled(false);
-                ibtPrev.setEnabled(false);
-                ibtPauseAndPlay.setEnabled(false);
-            }
 
             // select album art
             switch (music.getAlbumArt()){
@@ -299,6 +300,7 @@ public class MyPlaylistActivity extends Fragment {
 
                     firstPlay = true;
                     ibtPauseAndPlay.callOnClick();
+                    setButtonEnabled(true, true, true);
                 }
             });
 
@@ -502,6 +504,7 @@ public class MyPlaylistActivity extends Fragment {
             linearLayout = itemView.findViewById(R.id.linearLayout);
         }
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void startUiThread(){

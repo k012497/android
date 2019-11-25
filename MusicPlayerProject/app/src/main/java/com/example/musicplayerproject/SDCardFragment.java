@@ -94,7 +94,7 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
             // 확장명이 mp3 또는 mp4인 경우만 추가
             if(extendName.equals("mp3") || extendName.equals("mp4")) mp3List.add(fileName);
         }
-        
+
     }
 
     @Override
@@ -143,9 +143,7 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
                     mediaPlayer.setDataSource(MP3_PATH + selectedMP3);
                     mediaPlayer.prepare(); // 외부파일을 가져오기 위해 준비
                     mediaPlayer.start();
-                    btnPlay.setTextColor(Color.DKGRAY);
-                    btnStop.setTextColor(Color.WHITE);
-                    btnPlay.setEnabled(false);
+                    setButtonStatus(true);
                     btnStop.setEnabled(true);
                 } catch (IOException e) {
                     Log.e("btnPlay", "exception");
@@ -155,11 +153,22 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
             case R.id.btnStop:
                 mediaPlayer.stop();
                 mediaPlayer.reset();
-                btnPlay.setTextColor(Color.WHITE);
-                btnStop.setTextColor(Color.DKGRAY);
-                btnStop.setEnabled(false);
-                btnPlay.setEnabled(true);
+                setButtonStatus(false);
                 break;
+        }
+    }
+
+    private void setButtonStatus(boolean playing) {
+        if(playing){
+            btnPlay.setTextColor(Color.DKGRAY);
+            btnStop.setTextColor(Color.WHITE);
+            btnPlay.setEnabled(false);
+            btnStop.setEnabled(true);
+        } else {
+            btnPlay.setTextColor(Color.WHITE);
+            btnStop.setTextColor(Color.DKGRAY);
+            btnStop.setEnabled(false);
+            btnPlay.setEnabled(true);
         }
     }
 

@@ -24,7 +24,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal"
+        android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,14 +34,15 @@
         <Spinner
             android:id="@+id/spinner_genre"
             android:entries="@array/genre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginBottom="15dp">
         <TextView
             android:layout_width="wrap_content"
@@ -48,11 +51,8 @@
         <Spinner
             android:id="@+id/spinner_album"
             android:entries="@array/album"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-
-
-
 
 </LinearLayout>

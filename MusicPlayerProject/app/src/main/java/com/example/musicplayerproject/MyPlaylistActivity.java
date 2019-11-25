@@ -2,6 +2,7 @@ package com.example.musicplayerproject;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.icu.text.SimpleDateFormat;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ public class MyPlaylistActivity extends Fragment {
 
     private RecyclerView recyclerView;
     private ConstraintLayout music_playing;
-    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle, tvTitlePlaying, tvSingerPlaying;
+    private TextView tvTitle, tvSinger, tvGenre, tvCountClicked, tvNowTitle, tvTitlePlaying, tvSingerPlaying, tvTimeRunning, tvTimeLeft;
     private LinearLayout linearLayout;
     private ImageView imageView, ivAlbum;
     private ImageView ivToneArm;
@@ -82,6 +83,8 @@ public class MyPlaylistActivity extends Fragment {
         tvNowTitle = view.findViewById(R.id.tvNowTitle);
         tvTitlePlaying = view.findViewById(R.id.tvTitlePlaying);
         tvSingerPlaying = view.findViewById(R.id.tvSingerPlaying);
+        tvTimeRunning = view.findViewById(R.id.tvTimeRunning);
+        tvTimeLeft = view.findViewById(R.id.tvTimeLeft);
         seekBar = view.findViewById(R.id.seekBar);
         ibtPauseAndPlay = view.findViewById(R.id.ibtPause);
         ibtPrev = view.findViewById(R.id.ibtPrev);
@@ -500,8 +503,11 @@ public class MyPlaylistActivity extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void startUiThread(){
         Thread thread = new Thread(){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run() {
@@ -515,6 +521,7 @@ public class MyPlaylistActivity extends Fragment {
                     public void run() {
                         seekBar.setMax(mediaPlayer.getDuration());
                         seekBar.setMin(0);
+                        tvTimeLeft.setText(simpleDateFormat.format(mediaPlayer.getDuration()));
                     }
                 });
 
@@ -524,6 +531,9 @@ public class MyPlaylistActivity extends Fragment {
                         public void run() {
                             ivAlbum.setRotation((float) Math.random()*360);
                             seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                            int currentPosition = mediaPlayer.getCurrentPosition();
+                            tvTimeRunning.setText(simpleDateFormat.format(currentPosition));
+                            tvTimeLeft.setText(simpleDateFormat.format(mediaPlayer.getDuration() - currentPosition));
                         }
                     }); // end of runOnUiThread
                     SystemClock.sleep(200);

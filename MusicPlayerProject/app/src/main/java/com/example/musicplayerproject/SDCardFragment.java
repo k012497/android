@@ -94,6 +94,7 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
             // 확장명이 mp3 또는 mp4인 경우만 추가
             if(extendName.equals("mp3") || extendName.equals("mp4")) mp3List.add(fileName);
         }
+        
     }
 
     @Override

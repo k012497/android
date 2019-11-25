@@ -245,11 +245,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     + group + "';");
                             items.remove(position);
                             toastDisplay(group + " 삭제 완료 :)");
+                            adapter.notifyItemRemoved(position);
                         }
                         sqLiteDatabase.close();
                     }
 
-                    adapter.notifyItemRemoved(position);
                     return true;
                 }
             });
@@ -270,12 +270,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private class CustomHolder extends RecyclerView.ViewHolder{
-
         public CustomHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             tvCount = itemView.findViewById(R.id.tvCount);
         }
-
     }
 }

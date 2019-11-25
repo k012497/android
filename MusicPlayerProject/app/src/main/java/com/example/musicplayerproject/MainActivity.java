@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 switch (position){
                     case 0:
+                        if(MyPlaylistActivity.mediaPlayer != null && MyPlaylistActivity.mediaPlayer.isPlaying()){
+                            MyPlaylistActivity.ibtPauseAndPlay.callOnClick();
+                        }
                         break;
                     case 1:
                         if(SDCardFragment.mediaPlayer != null && SDCardFragment.mediaPlayer.isPlaying()){

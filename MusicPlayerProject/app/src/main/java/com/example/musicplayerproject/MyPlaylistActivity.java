@@ -46,7 +46,8 @@ public class MyPlaylistActivity extends Fragment {
     private LinearLayout linearLayout;
     private ImageView imageView, ivAlbum;
     private ImageView ivToneArm;
-    private ImageButton ibtPauseAndPlay, ibtPrev, ibtNext;
+    private ImageButton ibtPrev, ibtNext;
+    static ImageButton ibtPauseAndPlay;
     private SeekBar seekBar;
 
     private SlidingDrawer slidingDrawer;
@@ -59,7 +60,7 @@ public class MyPlaylistActivity extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerViewAdapter adapter;
 
-    private MediaPlayer mediaPlayer;
+    static MediaPlayer mediaPlayer;
     private String extractedName, selectedTitle;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
 
@@ -170,7 +171,7 @@ public class MyPlaylistActivity extends Fragment {
                 items = mDAO.selectAllByCount();
                 break;
         }
-        adapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
     }
 
     // trim fileName (remove extend name & under-bar)
@@ -248,7 +249,7 @@ public class MyPlaylistActivity extends Fragment {
                     break;
             }
 
-            // when click the item in recyclerView
+            // play music when click the item in recyclerView
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
                 @Override
@@ -298,7 +299,7 @@ public class MyPlaylistActivity extends Fragment {
                 }
             });
 
-            // delete the item, when long click the item in recyclerView
+            // delete the item when long click the item in recyclerView
             linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {

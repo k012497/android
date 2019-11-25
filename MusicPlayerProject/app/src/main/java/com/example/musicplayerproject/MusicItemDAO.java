@@ -101,7 +101,7 @@ public class MusicItemDAO extends MainActivity {
             strGenre = cursor.getString(2);
             count = cursor.getInt(3);
             strAlbum = cursor.getString(4);
-
+            Log.d("select by title", strTitle);
             items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
         }
 

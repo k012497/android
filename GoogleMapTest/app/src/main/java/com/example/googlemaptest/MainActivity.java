@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fragmentManager=getFragmentManager();
+        fragmentManager = getFragmentManager();
         mapFragment=(MapFragment)fragmentManager.findFragmentById(R.id.fgGoogleMap);
         mapFragment.getMapAsync(this);
 

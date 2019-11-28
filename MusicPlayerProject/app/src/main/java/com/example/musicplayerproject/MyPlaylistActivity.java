@@ -61,7 +61,7 @@ public class MyPlaylistActivity extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerViewAdapter adapter;
 
-    static MediaPlayer mediaPlayer;
+    static MediaPlayer mediaPlayer = new MediaPlayer();
     private String extractedName, selectedTitle;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
 
@@ -219,7 +219,7 @@ public class MyPlaylistActivity extends Fragment {
             final String musicTitle = trimFileName(music.getTitle());
             tvTitle.setText(musicTitle);
             tvSinger.setText(music.getSinger());
-            tvGenre.setText(music.getGenre());
+//            tvGenre.setText(music.getGenre());
             tvCountClicked.setText(String.valueOf(music.getCountClicked()));
 
             ibtPauseAndPlay.setOnClickListener(this);
@@ -398,7 +398,6 @@ public class MyPlaylistActivity extends Fragment {
                 case R.id.ibtPause:
                     if(firstPlay){
                         if(selectedTitle == null) break;
-                        mediaPlayer = new MediaPlayer();
                         setMarquee(true);
 
                         // play next song when completion

@@ -19,11 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
-import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 //        getSupportActionBar().setIcon(R.drawable.ic_hamburger_menu);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().show();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

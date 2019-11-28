@@ -1,11 +1,15 @@
 package com.example.musicplayerproject;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,15 +37,13 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
     private TextView tvSelectedSong;
     private Spinner spinner_genre, spinner_album;
     private ListView listView;
-    static Button btnPlay, btnStop, btnAdd;
-    static MediaPlayer mediaPlayer;
+    static Button btnAdd;
 
     private String selectedMP3;
     private static final String MP3_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
-    private ArrayList<String> mp3List = new ArrayList<String>();
+    private ArrayList<MusicItemDTO> mp3List = new ArrayList<MusicItemDTO>();
 
     private MusicItemDAO mDAO;
-    private MyDBHelper myDBHelper;
 
     public static SDCardFragment newInstance(){
         SDCardFragment fragment1 = new SDCardFragment();
@@ -55,73 +57,77 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
         context = container.getContext();
 
         listView = view.findViewById(R.id.listView);
-        btnPlay = view.findViewById(R.id.btnPlay);
-        btnStop = view.findViewById(R.id.btnStop);
         btnAdd = view.findViewById(R.id.btnAdd);
 
+        // read mp3 files from SDCard
         loadFromSDCard();
-        myDBHelper = new MyDBHelper(container.getContext());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_single_choice, mp3List);
+        // set Adapter
+        ArrayAdapter<MusicItemDTO> adapter = new ArrayAdapter<MusicItemDTO>(context, android.R.layout.simple_selectable_list_item, mp3List);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setAdapter(adapter);
         listView.setItemChecked(0, true);
 
         // initial setting
-        selectedMP3 = mp3List.get(0);
-        btnStop.setEnabled(false);
-        btnStop.setTextColor(Color.DKGRAY);
+        selectedMP3 = mp3List.get(0).getPath();
         mDAO = new MusicItemDAO(container.getContext());
 
-        btnPlay.setOnClickListener(this);
-        btnStop.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
         listView.setOnItemClickListener(this);
 
         return view;
     }
 
+    // when click ListView
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (selectedMP3 == null) return;
 
+        // 현재 재생중이면 정지 후 재생
+        if(MyPlaylistActivity.mediaPlayer.isPlaying()) {
+            Log.d("isplaying", "sdf");
+            MyPlaylistActivity.mediaPlayer.stop();
+            MyPlaylistActivity.mediaPlayer.reset();
+        }
 
-    private void loadFromSDCard() {
-        // SDcard의 파일을 읽어서 리스트뷰에 출력
-        mp3List = new ArrayList<String>();
-        File[] listFiles = new File(MP3_PATH).listFiles();
-        String fileName, extendName;
-        for(File file : listFiles){
-            fileName = file.getName(); // 파일명 또는 디렉토리명
-            extendName = fileName.substring(fileName.length() - 3); // 확장자명 가져오기 (마지막 3글자 가져오기)
-            // 확장명이 mp3 또는 mp4인 경우만 추가
-            if(extendName.equals("mp3") || extendName.equals("mp4")) mp3List.add(fileName);
+//        if(selectedMP3.equals(mp3List.get(position).getPath())) return; //같은 곡을 클릭했을 경우 정지만
+        selectedMP3 = mp3List.get(position).getPath();
+        try {
+            MyPlaylistActivity.mediaPlayer.setDataSource(selectedMP3);
+            MyPlaylistActivity.mediaPlayer.prepare(); // 외부파일을 가져오기 위해 준비
+            MyPlaylistActivity.mediaPlayer.start();
+        } catch (IOException e) {
+            Log.e("btnPlay", "exception");
+            return;
         }
 
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnAdd:
-                if(mDAO.isExist(selectedMP3) != null) {
+                if (mDAO.isExist(selectedMP3) != null) {
                     mDAO.toastDisplay("이미 추가된 곡입니다");
                     break;
                 }
+
+                if (MyPlaylistActivity.mediaPlayer.isPlaying()) {
+                    Log.d("isplaying", "sdf");
+                    MyPlaylistActivity.mediaPlayer.stop();
+                    MyPlaylistActivity.mediaPlayer.reset();
+                }
+
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                 View dialogView = LayoutInflater.from(context).inflate(R.layout.add_song, null);
                 dialog.setView(dialogView);
                 dialog.setTitle("Enter extra info");
 
-                spinner_genre = dialogView.findViewById(R.id.spinner_genre);
-                spinner_album = dialogView.findViewById(R.id.spinner_album);
-                tvSelectedSong = dialogView.findViewById(R.id.tvSelectedSong);
-
-                tvSelectedSong.setText(trimFileName());
-
-
                 dialog.setPositiveButton("ADD TO MY LIST", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(spinner_genre.getSelectedItem().toString().equals("")
-                                ||  spinner_album.getSelectedItem().toString().equals("")) {
+                        if (spinner_genre.getSelectedItem().toString().equals("")
+                                || spinner_album.getSelectedItem().toString().equals("")) {
                             mDAO.toastDisplay("장르와 앨범을 선택해주세요");
                             return;
                         }
@@ -136,62 +142,53 @@ public class SDCardFragment extends Fragment implements View.OnClickListener, Ad
                 dialog.setNegativeButton("BACK", null);
                 dialog.show();
                 break;
-
-            case R.id.btnPlay:
-                try {
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(MP3_PATH + selectedMP3);
-                    mediaPlayer.prepare(); // 외부파일을 가져오기 위해 준비
-                    mediaPlayer.start();
-                    setButtonStatus(true);
-                    btnStop.setEnabled(true);
-                } catch (IOException e) {
-                    Log.e("btnPlay", "exception");
-                }
-                break;
-
-            case R.id.btnStop:
-                mediaPlayer.stop();
-                mediaPlayer.reset();
-                setButtonStatus(false);
-                break;
         }
     }
 
-    private void setButtonStatus(boolean playing) {
-        if(playing){
-            btnPlay.setTextColor(Color.DKGRAY);
-            btnStop.setTextColor(Color.WHITE);
-            btnPlay.setEnabled(false);
-            btnStop.setEnabled(true);
-        } else {
-            btnPlay.setTextColor(Color.WHITE);
-            btnStop.setTextColor(Color.DKGRAY);
-            btnStop.setEnabled(false);
-            btnPlay.setEnabled(true);
+//    public String trimFileName() {
+//        String extractedName;
+//        // .확장자명 잘라내기
+//        int idx = selectedMP3.indexOf(".");
+//        // . 앞부분을 추출
+//        extractedName = selectedMP3.substring(0, idx);
+//
+//        // _를 공백으로 바꿈
+//        String tempName[] = extractedName.split("_");
+//        extractedName = "";
+//        for(int i = 0 ; i < tempName.length ; i++) {
+//            extractedName += (tempName[i] + " ");
+//        }
+//        return extractedName;
+//    }
+
+
+    private void loadFromSDCard(){
+        mp3List.removeAll(mp3List);
+        //가져오고 싶은 컬럼명 (id, 제목, 가수, 앨범아트, 재생시간, 경로)
+        ContentResolver contentResolver = context.getContentResolver();
+
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+        Cursor cursor = contentResolver.query(uri, null, selection, null, sortOrder);
+        cursor.moveToFirst();
+        Log.d("song", cursor.getCount()+"");
+        System.out.println("음악파일 개수 = " + cursor.getCount());
+        if (cursor != null && cursor.getCount() > 0) {
+            MusicItemDTO song = new MusicItemDTO();
+            do {
+                song.setId(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)));
+                song.setAlbumArt(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)));
+                song.setTitle(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                song.setSinger(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)));
+                song.setDuration(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
+                song.setPath(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)));
+                Log.d("song", song.getTitle());
+                // Save to audioList
+                mp3List.add(song);
+            } while (cursor.moveToNext());
         }
+        cursor.close();
     }
 
-    public String trimFileName() {
-        String extractedName;
-        // .확장자명 잘라내기
-        int idx = selectedMP3.indexOf(".");
-        // . 앞부분을 추출
-        extractedName = selectedMP3.substring(0, idx);
-
-        // _를 공백으로 바꿈
-        String tempName[] = extractedName.split("_");
-        extractedName = "";
-        for(int i = 0 ; i < tempName.length ; i++)
-        {
-            extractedName += (tempName[i] + " ");
-        }
-
-        return extractedName;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        selectedMP3 = mp3List.get(position);
-    }
 }

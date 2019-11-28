@@ -30,7 +30,7 @@ public class MusicItemDAO extends MainActivity {
         toastDisplay(title + " is added!");
         sqLiteDatabase.close();
         Log.d("MainActivity", title+"정보 입력완료 ");
-        items.add(new MusicItemDTO(title, singer, genre, 0, albumArt));
+//        items.add(new MusicItemDTO(title, singer, genre, 0, albumArt));
     }
 
     public ArrayList<MusicItemDTO> selectAll(){
@@ -50,7 +50,7 @@ public class MusicItemDAO extends MainActivity {
             count = cursor.getInt(3);
             strAlbum = cursor.getString(4);
 
-            items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
+//            items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
         }
 
         cursor.close();
@@ -76,7 +76,7 @@ public class MusicItemDAO extends MainActivity {
             count = cursor.getInt(3);
             strAlbum = cursor.getString(4);
 
-            items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
+//            items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
         }
 
         cursor.close();
@@ -102,7 +102,7 @@ public class MusicItemDAO extends MainActivity {
             count = cursor.getInt(3);
             strAlbum = cursor.getString(4);
             Log.d("select by title", strTitle);
-            items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
+//            items.add(new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum));
         }
 
         cursor.close();
@@ -128,7 +128,7 @@ public class MusicItemDAO extends MainActivity {
                 count = cursor.getInt(3);
                 strAlbum = cursor.getString(4);
 
-                music = new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum);
+//                music = new MusicItemDTO(strTitle, strSinger, strGenre, count, strAlbum);
             }
         }
 
@@ -138,6 +138,8 @@ public class MusicItemDAO extends MainActivity {
     }
 
     public void delete(String title){
+        // db를 닫는다
+        sqLiteDatabase.close();
         sqLiteDatabase = myDBHelper.getWritableDatabase();
         sqLiteDatabase.execSQL("DELETE FROM musicTBL WHERE title = '" + title + "';");
         toastDisplay("삭제 완료 :)");

@@ -3,6 +3,7 @@ package com.example.musicplayerproject;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -30,22 +31,13 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(fragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        // 페이지를 넘길 때
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                switch (position){
-                    case 0:
-                        if(MyPlaylistActivity.mediaPlayer != null && MyPlaylistActivity.mediaPlayer.isPlaying()){
-                            MyPlaylistActivity.ibtPauseAndPlay.callOnClick();
-                        }
-                        break;
-                    case 1:
-                        if(SDCardFragment.mediaPlayer != null && SDCardFragment.mediaPlayer.isPlaying()){
-                            SDCardFragment.btnStop.callOnClick();
-                        }
-                        break;
-                }
+                if(MyPlaylistActivity.mediaPlayer.isPlaying())
+                    MyPlaylistActivity.mediaPlayer.stop();
             }
 
             @Override
@@ -58,5 +50,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 }

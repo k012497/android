@@ -3,6 +3,8 @@ package com.example.musicplayerproject;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -14,20 +16,10 @@ public class MyDBHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, VERSION);
     }
 
-    private int id;
-    private String title;
-    private String artist;
-    private String genre;
-    private int countClicked;
-    private String albumArt;
-    private String dataPath;
-    private long duration;
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         String str = "CREATE TABLE musicTBL (" +
-                "title CHAR(60) PRIMARY KEY, singer CHAR(20), genre CHAR(20), countClicked Integer, albumArt CHAR(20));";
-//                "id Integer PRIMARY KEY AUTOINCREMENT, title CHAR(60) PRIMARY KEY, singer CHAR(20), genre CHAR(20), countClicked Integer, albumArt CHAR(20));";
+                "id CHAR(30) PRIMARY KEY, title CHAR(60), singer CHAR(20), duration Long, albumArt CHAR(30), path CHAR(60));";
         db.execSQL(str);
     }
 
@@ -35,5 +27,6 @@ public class MyDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS musicTBL");
         onCreate(db);
+        Log.d("drop", "완");
     }
 }

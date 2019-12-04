@@ -1,6 +1,7 @@
 package com.example.fragmentviewtest;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class FragmentActivity1 extends Fragment implements View.OnClickListener {
-
-    Button flBtnName;
+    private final static String TAG = "FragmentActivity1";
+    Button f1BtnName;
     View view;
 
     public FragmentActivity1() {
@@ -24,8 +25,15 @@ public class FragmentActivity1 extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment1, container, false);
-        flBtnName = view.findViewById(R.id.f1BtnName);
-        flBtnName.setOnClickListener(this);
+        f1BtnName = view.findViewById(R.id.f1BtnName);
+        f1BtnName.setOnClickListener(this);
+
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            String name = bundle.getString("name");
+            f1BtnName.setText(name);
+            Log.d(TAG, name);
+        }
 
         return view;
     }

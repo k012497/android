@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, FragmentActivity2.OnFragmentInteractionListener {
 
     Button btnMenu1, btnMenu2, btnMenu3, btnMenu4;
+    private String name;
+    Bundle bundle;
 
     @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     @Override
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.btnMenu1:
                 fgActivity = new FragmentActivity1(); //얘를 객체화 시키면 생명주기 스타트! 그 속에서 inflate xml
+
+                fgActivity.setArguments(bundle);
                 break;
 
             case R.id.btnMenu2:
@@ -60,5 +64,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ft.replace(R.id.frameLayout, fgActivity); //replace fgActivity1 with frameLayout
         ft.commit();
 
+    }
+
+    @Override
+    public void onFragmentInteraction(Bundle bundle) { // 값이 매개변수로 전달되어 올 것!
+        this.bundle = bundle;
     }
 }

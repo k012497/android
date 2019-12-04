@@ -20,7 +20,11 @@
         android:id="@+id/bottomMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:itemBackground="#FFFFFF"
+        app:itemIconTint="@drawable/color"
+        app:itemTextColor="@drawable/color"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_behavior="tech.thdev.app.view.BottomNavigationBehavior"
         app:menu="@menu/bottom_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

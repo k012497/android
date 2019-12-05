@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 //                fragmentTransaction.replace(R.id.frameLayout, new Fragment1Activity());
                 break;
 //            case 2: fragmentTransaction.replace(R.id.frameLayout, new Fragment2Activity()); break;
-            case 3: fragmentTransaction.replace(R.id.frameLayout, new FragmentTest()); break;
+            case 3: fragmentTransaction.replace(R.id.frameLayout, new FragmentTest(this)); break;
         }
 
         fragmentTransaction.commit();

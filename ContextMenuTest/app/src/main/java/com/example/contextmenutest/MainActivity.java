@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater menuInflater = getMenuInflater();
 
+
         if (v == btnContextMenu){
             menuInflater.inflate(R.menu.context_menu, menu);
         }else if (v == btnContextMenu2){

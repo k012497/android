@@ -146,23 +146,6 @@ public class FragmentTest extends Fragment implements View.OnClickListener {
                         ListView listView = view.findViewById(R.id.listView);
                         ListViewAdapter listViewAdapter = new ListViewAdapter();
                         listView.setAdapter(listViewAdapter);
-
-//                        View.OnClickListener tvListener = new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-////                                TextView textView = v.findViewById(R.id.tvName);
-////                                LinearLayout cookie = v.findViewById(R.id.cookie);
-//                                // 리스트뷰 내용 바꾸기
-////                                CookieBar.dismiss(activity);
-//                            }
-//                        };
-//
-//                        tvName.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                CookieBar.dismiss(activity);
-//                            }
-//                        });
                     }
                 })
                 .setDuration(10000)

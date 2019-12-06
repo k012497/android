@@ -37,7 +37,10 @@ public class AlarmService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         createNotification();
+//        startForeground(0, notification); /////////////////
+
         return START_NOT_STICKY;
     }
 
@@ -67,5 +70,12 @@ public class AlarmService extends Service {
         notificationManager.notify(0, notification); /////////////////
 //        startForeground(0, notification); /////////////////
     }
+
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        stopSelf();
+//    }
+
 
 }

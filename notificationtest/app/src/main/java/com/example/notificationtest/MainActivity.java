@@ -139,8 +139,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         alarmList.remove(alarmId);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.setAction("off");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, 0);
         alarmManager.cancel(pendingIntent);
+
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {

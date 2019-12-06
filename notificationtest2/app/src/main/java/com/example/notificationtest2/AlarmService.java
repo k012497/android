@@ -58,9 +58,12 @@ public class AlarmService extends Service {
     private String createNotificationChannel() {
         String channelId = "Alarm";
         String channelName = getString(R.string.app_name);
-        NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
         //channel.setDescription(channelName);
         channel.setSound(null, null);
+        channel.enableVibration(true);
+        channel.setVibrationPattern(new long[]{500,500});
+        channel.setShowBadge(true);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.createNotificationChannel(channel);
@@ -69,3 +72,4 @@ public class AlarmService extends Service {
         return channelId;
     }
 }
+

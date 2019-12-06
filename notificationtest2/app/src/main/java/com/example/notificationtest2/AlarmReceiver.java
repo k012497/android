@@ -1,7 +1,6 @@
 package com.example.notificationtest2;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,33 +8,43 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+
+import static android.app.Notification.VISIBILITY_PUBLIC;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String TAG = "AlarmReceiver";
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    //    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent rIntent = new Intent(context, AlarmService.class);
         PendingIntent pend = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(rIntent);
+            String text = intent.getStringExtra("text");
+            int id = intent.getIntExtra("id", 0);
             //NotificationManager 안드로이드 상태바에 메세지를 던지기위한 서비스 불러오고
             NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
             Notification.Builder builder = new Notification.Builder(context);
-            builder.setSmallIcon(R.drawable.ic_launcher_background).setWhen(System.currentTimeMillis())
-                    .setContentTitle("청소하실 시간입니다!").setContentText("목록을 확인해 주세요")
-                    .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingIntent).setAutoCancel(true);
+            builder.setSmallIcon(R.drawable.ic_launcher_background)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentTitle(text)
+                    .setContentText(text)
+                    .setChannelId("Alarm")
+                    .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                    .setFullScreenIntent(pend, true)
+                    .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                    .setContentIntent(pend)
+                    .setVisibility(VISIBILITY_PUBLIC)
+                    .setAutoCancel(true);
             WakeLocker.acquire(context);
-            notificationmanager.notify(1, builder.build());
-            Log.d(TAG, "help");
+            notificationmanager.notify(id, builder.build());
 
         } else {
             context.startService(rIntent);
@@ -58,7 +67,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             WakeLocker.acquire(context);
             mNotificationManager.notify(id, mBuilder.build());
-            Log.d(TAG, "help");
 
             //NotificationManager 안드로이드 상태바에 메세지를 던지기위한 서비스 불러오고
 //            NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

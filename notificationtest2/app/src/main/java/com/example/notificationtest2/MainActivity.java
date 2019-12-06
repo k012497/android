@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Calendar calendar;
     private TimePicker timePicker;
     private TextView txtDate;
-    private TextView[] tvAlarm = new TextView[1];
-    private Integer[] tvAlarmId = new Integer[]{R.id.tvAlarm1};
+    private TextView[] tvAlarm = new TextView[3];
+    private Integer[] tvAlarmId = new Integer[]{R.id.tvAlarm1, R.id.tvAlarm2, R.id.tvAlarm3};
     private static final String TAG = "MainActivity";
     private ArrayList<PendingIntent> intentArray = new ArrayList<>();
     private AlarmManager alarmManager;
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "Calendar.getInstance() : " + calendar);
 
         Button btnCalendar = findViewById(R.id.btnCalendar);
-//        Button btnAlarm = findViewById(R.id.btnAlarm);
-//        Button btnCancel = findViewById(R.id.btnCancel);
+        Button btnAlarm = findViewById(R.id.btnAlarm);
+        Button btnCancel = findViewById(R.id.btnCancel);
         txtDate = findViewById(R.id.txtDate);
         for (int i = 0; i < tvAlarmId.length; i++) {
             tvAlarm[i] = findViewById(tvAlarmId[i]);
@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnCalendar.setOnClickListener(this);
         tvAlarm[0].setOnClickListener(this);
-//        tvAlarm[1].setOnClickListener(this);
-//        tvAlarm[2].setOnClickListener(this);
-//        btnCancel.setOnClickListener(this);
+        tvAlarm[1].setOnClickListener(this);
+        tvAlarm[2].setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
     }
 
     // 날짜 표시
@@ -80,10 +80,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 index = 0;
                 setAlarm();
                 break;
-
-//            case R.id.btnCancel:
-//                // 알람 취소
-//                cancelAlarm();
+            case R.id.tvAlarm2:
+                // 알람 등록
+                index = 1;
+                setAlarm();
+                break;
+            case R.id.tvAlarm3:
+                // 알람 등록
+                index = 2;
+                setAlarm();
+                break;
+            case R.id.btnCancel:
+                // 알람 취소
+                cancelAlarm();
         }
     }
 
@@ -158,14 +167,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 toastDisplay("Alarm: " + String.valueOf(format.format(calendar.getTime())));
                 break;
         }
-        for (int i = 0; i< 3 ; i++) {
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            // Receiver 설정
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, intent, 0);
-            // 알람 설정
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            intentArray.add(pendingIntent);
-        }
+//        for (int i = 0; i< 3 ; i++) {
+//            Intent intent = new Intent(this, AlarmReceiver.class);
+//            // Receiver 설정
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, intent, 0);
+//            // 알람 설정
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//            intentArray.add(pendingIntent);
+//        }
 
     }
 

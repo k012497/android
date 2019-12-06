@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     /* 알람 등록 */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setAlarm() {
-
-
         // 알람 시간 설정
         this.calendar.set(Calendar.HOUR_OF_DAY, this.timePicker.getHour());
         this.calendar.set(Calendar.MINUTE, this.timePicker.getMinute());
@@ -122,15 +120,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         Intent intent = new Intent(this, AlarmReceiver.class);
 //        alarmId = (int) System.currentTimeMillis();
         alarmId = 1234;
-        intent.putExtra("name", ""+ alarmId);
-        intent.setAction("on");
+        alarmList.add(alarmId);
+//        intent.putExtra("name", ""+ alarmId);
+//        intent.setAction("on");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // 알람 설정
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            Log.d("alarmManager", alarmManager.toString());
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, this.calendar.getTimeInMillis(), pendingIntent);
-        alarmList.add(alarmId);
 
         // Toast 보여주기 (알람 시간 표시)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -139,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     private void deleteAlarm(Context context, int alarmId) {
         Log.d("off", alarmId + " 삭제");
-//        alarmList.remove(alarmId);
+        alarmList.remove(alarmId);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.setAction("off");

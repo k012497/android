@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +33,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
-//    final static String TAG = "";
+    final static String TAG = "MainActivity";
 
     // 알람 시간
     private Calendar calendar;
@@ -41,10 +42,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private Button btnCalendar, btnAlarm, btnEdit;
     private Switch switchAlarm;
 
-//    private AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-//    private ArrayList<Integer> numberList = new ArrayList<Integer>();
-//    private int number = 0;
+    static int alarmId = 0;
+    ArrayList<Integer> alarmList = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,29 +66,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         btnAlarm.setOnClickListener(mClickListener);
         btnEdit.setOnClickListener(mClickListener);
 
+        switchAlarm.setChecked(true);
         switchAlarm.setOnCheckedChangeListener(this);
-
-//        getKeyHash(this);
     }
-
-
-    //카카오톡공유
-//    public void getKeyHash(final Context context) {
-//        try {
-//            PackageInfo info = getPackageManager().getPackageInfo("com.example.soyoung.cheanotification", PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                String str = Base64.encodeToString(md.digest(), Base64.DEFAULT);
-//                Log.d("KeyHash:", str);
-//                Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-//            }
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /* 날짜 표시 */
     private void displayDate() {
@@ -118,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     /* 알람 등록 */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setAlarm() {
+
+
         // 알람 시간 설정
         this.calendar.set(Calendar.HOUR_OF_DAY, this.timePicker.getHour());
         this.calendar.set(Calendar.MINUTE, this.timePicker.getMinute());
@@ -129,18 +110,42 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             return;
         }
 
+        // 이미 등록된 알람이 있을 시 (수정 등록 시) 삭제
+        for(int id : alarmList){
+            if(id == alarmId){
+                deleteAlarm(this, alarmId);
+                break;
+            }
+        }
+
         // Receiver 설정
         Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+//        alarmId = (int) System.currentTimeMillis();
+        alarmId = 1234;
+        intent.putExtra("name", ""+ alarmId);
+        intent.setAction("on");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // 알람 설정
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Log.d("alarmManager", alarmManager.toString());
         alarmManager.set(AlarmManager.RTC_WAKEUP, this.calendar.getTimeInMillis(), pendingIntent);
+        alarmList.add(alarmId);
 
         // Toast 보여주기 (알람 시간 표시)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Toast.makeText(this, "Alarm : " + format.format(calendar.getTime()), Toast.LENGTH_LONG).show();
+    }
+
+    private void deleteAlarm(Context context, int alarmId) {
+        Log.d("off", alarmId + " 삭제");
+//        alarmList.remove(alarmId);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.setAction("off");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, 0);
+        alarmManager.cancel(pendingIntent);
+
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -151,18 +156,16 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 case R.id.btnCalendar:
                     // 달력
                     showDatePicker();
-
                     break;
+
                 case R.id.btnAlarm:
                     // 알람 등록
                     setAlarm();
-
-
                     break;
+
                 case R.id.btnEdit:
                     // 알람 수정
-                    editAlarm();
-
+//                    editAlarm();
                     break;
             }
         }
@@ -196,8 +199,15 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("switch", b);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, this.calendar.getTimeInMillis(), pendingIntent);
+        Toast.makeText(this, String.valueOf(b), Toast.LENGTH_SHORT).show();
     }
 }

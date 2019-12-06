@@ -1,5 +1,6 @@
 package com.example.notificationtest;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,10 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class FoodAndDateActivity extends AppCompatActivity {
+    private String textKey = "aBcDeFg12345678";
 
     private TextView txtFood, txtDate;
     private ImageView imageView;
     private Button btnKakao, btnMain;
+
+    static NotificationManager notificationManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +34,7 @@ public class FoodAndDateActivity extends AppCompatActivity {
         btnKakao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                shareKakao();
+                sharedURL();
             }
         });
 
@@ -44,24 +48,13 @@ public class FoodAndDateActivity extends AppCompatActivity {
         });
     }
 
-    //카카오톡공유
-//    private void shareKakao() {
-//
-//        try{
-//
-//            final KakaoLink kakaoLink = KakaoLink.getKakaoLink(getApplicationContext());
-//            final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
-//
-//            kakaoTalkLinkMessageBuilder.addText("내 냉장고에 우유가 있어!");
-//
-//            kakaoTalkLinkMessageBuilder.addImage(String.valueOf(imageView), 160, 160);
-//
-//            kakaoTalkLinkMessageBuilder.addAppButton("유통기한 확인하러 가기");
-//
-//            kakaoLink.sendMessage(kakaoTalkLinkMessageBuilder, this);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+    private void sharedURL() {
+        Intent sharedMessage = new Intent(Intent.ACTION_SEND);
+        sharedMessage.addCategory(Intent.CATEGORY_DEFAULT);
+        sharedMessage.putExtra(Intent.EXTRA_SUBJECT, "언니 올때 메로나 냉동실^^");
+        sharedMessage.putExtra(Intent.EXTRA_TEXT,   '\n' + "냉장고 열쇠: " + textKey);
+        sharedMessage.setType("text/plain");
+        startActivity(Intent.createChooser(sharedMessage, "냉장고 공유하기"));
+    }
 
 }

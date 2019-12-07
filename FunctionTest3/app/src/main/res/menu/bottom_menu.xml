@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_1"
+        android:enabled="true"
+        android:icon="@drawable/icon1"
+        android:title="HOME" />
+    <item
+        android:id="@+id/action_2"
+        android:enabled="true"
+        android:icon="@drawable/icon2"
+        android:title="SEARCH" />
+    <item
+        android:id="@+id/action_3"
+        android:enabled="true"
+        android:icon="@drawable/icon3"
+        android:title="ADD" />
+    <item
+        android:id="@+id/action_4"
+        android:enabled="true"
+        android:icon="@drawable/icon4"
+        android:title="LIKE" />
+    <item
+        android:id="@+id/action_5"
+        android:enabled="true"
+        android:icon="@drawable/icon5"
+        android:title="MYPAGE" />
+</menu>

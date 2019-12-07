@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,11 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -55,7 +51,7 @@ public class FragmentTest extends Fragment implements View.OnClickListener {
     static Bundle bundle = new Bundle(1);
 
     Context context;
-    PopupMenu popupMenu = null;
+    boolean removeMode;
 
     public FragmentTest(Activity activity) {
         this.activity = activity;
@@ -99,8 +95,58 @@ public class FragmentTest extends Fragment implements View.OnClickListener {
         setContent();
 
         btnSelect.setOnClickListener(this);
-//        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        if(removeMode){
+            inflater.inflate(R.menu.remove_mode_menu, menu);
+        }else{
+            inflater.inflate(R.menu.manage_food_menu, menu);
+            menu.getItem(0).setIcon(R.drawable.add);
+            menu.getItem(1).setIcon(R.drawable.remove);
+            menu.getItem(2).setIcon(R.drawable.search);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add:
+                // 아이템 추가 인텐트
+                Log.d("메뉴클릭", "action_add");
+                break;
+
+            case R.id.action_remove:
+                // 삭제 모드로 전환
+                // - 달린 아이템들
+                Log.d("메뉴클릭", "action_remove");
+                removeMode = true;
+                getActivity().invalidateOptionsMenu();
+                break;
+
+            case R.id.action_search:
+                // 해당 냉장고속 재료 검색
+                Log.d("메뉴클릭", "action_search");
+                break;
+
+            case R.id.action_done:
+                // 삭제 모드 해제
+                Log.d("메뉴클릭","action_back");
+                removeMode = false;
+                getActivity().invalidateOptionsMenu();
+                break;
+
+            case R.id.action_delete:
+                // 선택한 목록 삭제
+                Log.d("메뉴클릭","action_delete");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setContent() {

@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Fragment1 extends Fragment {
 
@@ -44,7 +46,7 @@ public class Fragment1 extends Fragment {
 
     // 체크박스 값 저장
     int i = 0;
-    ArrayList<Integer> checkedList = new ArrayList<Integer>(); // 현재 체크된 체크박스의 index모음 - delete 시 사용
+    Set<MainData> removed = new HashSet<>(); // 현재 체크된 체크박스의 MainData 모음 - delete 시 사용
     ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>(); // 현재 리사이클러뷰에 있는 아이템의 체크박스 모음 - Visiblity 관리용
     Menu menu;
 
@@ -132,15 +134,9 @@ public class Fragment1 extends Fragment {
                 // 선택한 목록 삭제
                 Log.d("메뉴클릭", "action_delete");
 
-                for(int position : checkedList){
-                    Log.d("delete", position + "번 삭제 / 실제이름 " + list.get(position).getTxtName());
-                    // 어댑터에 연결된 데이터에서 제거
-                    list.remove(position);
-                    // 체크박스 리스트에서 제거
-                    // DB에서도 제거
+                list.removeAll(removed);
 
-                }
-                checkedList.clear();
+                removed.clear();
                 checkBoxes.clear();
                 recyclerView.removeAllViews();
                 mainAdapter.notifyDataSetChanged();
@@ -227,11 +223,11 @@ public class Fragment1 extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
-                        checkedList.add(position);
                         Log.d("onCheckedChanged", position+"번 체크 설정");
+                        removed.add(list.get(position));
                     } else {
-                        checkedList.remove(position);
                         Log.d("onCheckedChanged", position+"번 체크 해제");
+                        removed.remove(list.get(position));
                     }
                 }
             });

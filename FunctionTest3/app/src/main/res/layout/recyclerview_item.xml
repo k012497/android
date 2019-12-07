@@ -9,7 +9,7 @@
     <LinearLayout
         android:tag="Bottom2"
         android:layout_width="wrap_content"
-        android:layout_height="100dp">
+        android:layout_height="60dp">
         <ImageView
             android:id="@+id/delete"
             android:src="@android:drawable/ic_menu_search"
@@ -36,57 +36,71 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/llContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_margin="5dp">
 
         <ImageView
-            android:id="@+id/imgProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher" />
+            android:id="@+id/imageView"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:layout_constraintEnd_toStartOf="@id/llFoodInfo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toStartOf="@id/llFoodInfo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:id="@+id/llFoodInfo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/progressBar"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/txtName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="안드로이드 5반 "
-                android:textSize="17dp"
-                app:layout_constraintBottom_toTopOf="@id/txtContent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:text="이름" />
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--    <View-->
+    <!--        style="@style/Divider"-->
+    <!--        android:layout_marginTop="6dp"-->
+    <!--        android:layout_below="@id/constraintLayout" />-->
+</com.daimajia.swipe.SwipeLayout >
 
 
-            <TextView
-                android:id="@+id/txtContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="안드로이드 자료 "
-                android:textSize="17dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtName" />
-
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
 
 
-</com.daimajia.swipe.SwipeLayout>

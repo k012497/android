@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ public class Fragment1 extends Fragment {
 
 
     private View view;
-    private ArrayList<com.example.functiontest3.MainData> list = new ArrayList<>();
+    private ArrayList<MainData> list = new ArrayList<MainData>();
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private MainAdapter mainAdapter;
@@ -41,7 +40,6 @@ public class Fragment1 extends Fragment {
     public TextView txtContent;
     public ImageView delete, open;
     public CheckBox checkBox;
-    public LinearLayout llContainer;
 //    public boolean showCheckState = false;
 
     // 체크박스 값 저장
@@ -53,7 +51,6 @@ public class Fragment1 extends Fragment {
 
     private static final String TAG = "MainActivity";
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,15 +61,13 @@ public class Fragment1 extends Fragment {
         linearLayoutManager = new LinearLayoutManager(container.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        list = new ArrayList<>();
+        list = new ArrayList<MainData>();
         mainAdapter = new MainAdapter(R.layout.recyclerview_item, list);
         recyclerView.setAdapter(mainAdapter);
 
         setHasOptionsMenu(true);
         return view;
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -98,6 +93,8 @@ public class Fragment1 extends Fragment {
 
                 MainData mainData = new MainData(R.mipmap.ic_launcher, i++ + "", "졸리다");
                 list.add(mainData);
+
+                Log.d("sd","sdf" + (list.get(0)==null));
                 mainAdapter.notifyDataSetChanged();
                 break;
 
@@ -111,7 +108,6 @@ public class Fragment1 extends Fragment {
                 for(CheckBox checkBox : checkBoxes){
                     checkBox.setVisibility(View.VISIBLE);
                 }
-//                showCheckState = true;
 
                 break;
 
@@ -137,11 +133,12 @@ public class Fragment1 extends Fragment {
                 Log.d("메뉴클릭", "action_delete");
 
                 for(int position : checkedList){
-                    Log.d("delete", position+"번 삭제");
+                    Log.d("delete", position + "번 삭제 / 실제이름 " + list.get(position).getTxtName());
                     // 어댑터에 연결된 데이터에서 제거
                     list.remove(position);
                     // 체크박스 리스트에서 제거
                     // DB에서도 제거
+
                 }
                 checkedList.clear();
                 checkBoxes.clear();
@@ -160,7 +157,7 @@ public class Fragment1 extends Fragment {
 
         //1. context : 제공이 된다.(OnCreateViewHolder 에서 제공이 되는데, ViewGroup 으로 제공이 된다.)
         private int layout; // 부분화면 객체를 생성자로 받는것이다.
-        private ArrayList<MainData> list = new ArrayList<>();
+        private ArrayList<MainData> list = new ArrayList<MainData>();
 
         public MainAdapter(int layout, ArrayList<MainData> list) {
             this.layout = layout;
@@ -184,7 +181,7 @@ public class Fragment1 extends Fragment {
 
             imgProfile.setImageResource(list.get(position).getImgProfile());
             txtName.setText(list.get(position).getTxtName());
-            txtContent.setText(list.get(position).getTxtContent());
+//            txtContent.setText(list.get(position).getTxtContent());
             customViewHolder.itemView.setTag(position);
 
             customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +221,7 @@ public class Fragment1 extends Fragment {
 
             // 체크박스 리스트에 담아놓기 - Visibility 관리용
             checkBoxes.add(checkBox);
-            Log.d("checkBoxes에 add중", list.get(position).getTxtName()+"번 만들어짐");
+            Log.d("checkBoxes에 add중", list.get(position).getTxtName()+"번 만들어짐 " + position);
 
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -256,13 +253,13 @@ public class Fragment1 extends Fragment {
             public CustomViewHolder(@NonNull View itemView) {
 
                 super(itemView);//여기에 레이아웃 인플레이터가 전달이 된 상태이다.
-                imgProfile = itemView.findViewById(R.id.imgProfile);
+                imgProfile = itemView.findViewById(R.id.imageView);
                 txtName = itemView.findViewById(R.id.txtName);
-                txtContent = itemView.findViewById(R.id.txtContent);
+//                txtContent = itemView.findViewById(R.id.txtContent);
                 delete = itemView.findViewById(R.id.delete);
                 open = itemView.findViewById(R.id.open);
                 checkBox = itemView.findViewById(R.id.checkBox);
-                llContainer = view.findViewById(R.id.llContainer);
+//                llContainer = view.findViewById(R.id.llContainer);
             }
         }
     }

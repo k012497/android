@@ -37,12 +37,6 @@ public class AlarmService extends Service {
             startForeground(1, notification);
         }
 
-//
-//        // 알림창 호출
-//        Intent sIntent = new Intent(this, AlarmActivity.class);
-//        // 새로운 TASK를 생성해서 Activity를 최상위로 올림
-//        sIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(sIntent);
 
         Log.d(TAG, "Alarm");
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

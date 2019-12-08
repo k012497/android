@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Fragment1 extends Fragment {
-
+    private static final String TAG = "MainActivity";
 
     private View view;
     private ArrayList<MainData> list = new ArrayList<MainData>();
@@ -42,16 +42,12 @@ public class Fragment1 extends Fragment {
     public TextView txtContent;
     public ImageView delete, open;
     public CheckBox checkBox;
-//    public boolean showCheckState = false;
 
     // 체크박스 값 저장
     int i = 0;
     Set<MainData> removed = new HashSet<>(); // 현재 체크된 체크박스의 MainData 모음 - delete 시 사용
     ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>(); // 현재 리사이클러뷰에 있는 아이템의 체크박스 모음 - Visiblity 관리용
     Menu menu;
-
-
-    private static final String TAG = "MainActivity";
 
     @Nullable
     @Override
@@ -127,7 +123,6 @@ public class Fragment1 extends Fragment {
                     checkBox.setVisibility(View.INVISIBLE);
                     checkBox.setChecked(false);
                 }
-//                showCheckState = false;
                 break;
 
             case R.id.action_delete:
@@ -148,7 +143,6 @@ public class Fragment1 extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
     public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
 
         //1. context : 제공이 된다.(OnCreateViewHolder 에서 제공이 되는데, ViewGroup 으로 제공이 된다.)
@@ -159,7 +153,6 @@ public class Fragment1 extends Fragment {
             this.layout = layout;
             this.list = list;
         }
-
 
         @NonNull //viewHolder 에 있는 화면을 객체화해서 해당된 viewHolder 를 리턴한다.
         @Override //getView 와 같다.
@@ -177,7 +170,6 @@ public class Fragment1 extends Fragment {
 
             imgProfile.setImageResource(list.get(position).getImgProfile());
             txtName.setText(list.get(position).getTxtName());
-//            txtContent.setText(list.get(position).getTxtContent());
             customViewHolder.itemView.setTag(position);
 
             customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +178,6 @@ public class Fragment1 extends Fragment {
                     Toast.makeText(v.getContext(), list.get(position).getTxtName() + " 선택", Toast.LENGTH_SHORT).show();
                 }
             });
-
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -251,11 +242,9 @@ public class Fragment1 extends Fragment {
                 super(itemView);//여기에 레이아웃 인플레이터가 전달이 된 상태이다.
                 imgProfile = itemView.findViewById(R.id.imageView);
                 txtName = itemView.findViewById(R.id.txtName);
-//                txtContent = itemView.findViewById(R.id.txtContent);
                 delete = itemView.findViewById(R.id.delete);
                 open = itemView.findViewById(R.id.open);
                 checkBox = itemView.findViewById(R.id.checkBox);
-//                llContainer = view.findViewById(R.id.llContainer);
             }
         }
     }

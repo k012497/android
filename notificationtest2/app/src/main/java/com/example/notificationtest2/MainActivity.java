@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(getIntent() != null){
+            Intent intent = getIntent();
+            String str = intent.getStringExtra("food");
+
+        }
+
         calendar = Calendar.getInstance();
         Log.d(TAG, "Calendar.getInstance() : " + calendar);
 
